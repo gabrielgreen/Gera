@@ -1,0 +1,7 @@
+*.pidb
+*.VisualState.xml
+*.suo
+/Gera/obj
+/Gera/bin
+/UnitTests/bin
+/UnitTests/obj

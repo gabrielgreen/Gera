@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gera", "Gera\Gera.csproj", "{26D01FA6-EFB8-4910-969F-F02303B0F985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blueprints", "..\blueprints.NET\blueprints\blueprints.csproj", "{B9DE4181-416E-4DE4-A983-B90FC9412774}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryGraph", "..\blueprints.NET\InMemoryGraph\InMemoryGraph.csproj", "{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A40FA0D3-36FC-4992-9903-091BB7741112}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26D01FA6-EFB8-4910-969F-F02303B0F985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D01FA6-EFB8-4910-969F-F02303B0F985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D01FA6-EFB8-4910-969F-F02303B0F985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D01FA6-EFB8-4910-969F-F02303B0F985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A40FA0D3-36FC-4992-9903-091BB7741112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A40FA0D3-36FC-4992-9903-091BB7741112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A40FA0D3-36FC-4992-9903-091BB7741112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A40FA0D3-36FC-4992-9903-091BB7741112}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
