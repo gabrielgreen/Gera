@@ -1,12 +1,12 @@
 ﻿/*
- * Copyright (c) 2010-2011, Achim 'ahzf' Friedland <code@ahzf.de>
- * This file is part of Gera
+ * Copyright (c) 2010-2011 Achim 'ahzf' Friedland <achim.friedland@aperis.com>
+ * This file is part of Gera <http://www.github.com/ahzf/Gera>
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Affero GPL license, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.gnu.org/licenses/agpl.html
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,23 +33,36 @@ namespace GeraTest
         public static void Main(String[] myArgs)
         {
 
-            var SemanticGraph = new GeraGraph();
+            var _SemanticGraph = new GeraGraph();
 
             // Vertex properties
-            var FirstName = FOAF.FirstName("FirstName");
-            var Nick      = FOAF.Nick     ("Nick");
-            var LastName  = FOAF.LastName ("LastName");
+            var _FirstName = FOAF.FirstName("FirstName");
+            var _Nick      = FOAF.Nick     ("Nick");
+            var _LastName  = FOAF.LastName ("LastName");
 
             // Edges
-            var Knows     = FOAF.Knows    ("knows");
+            var _Knows     = FOAF.Knows    ("knows");
 
 
             // Vertices
-            var alice = SemanticGraph.AddVertex(new VertexId(1), v => v.SetProperty(FirstName, "Alice"));
-            var bob   = SemanticGraph.AddVertex(new VertexId(2), v => v.SetProperty(FirstName, "Bob"));
+            var _alice = _SemanticGraph.AddVertex(new VertexId(1), v => v.SetProperty(_FirstName, "Alice"));
+            var _bob   = _SemanticGraph.AddVertex(new VertexId(2), v => v.SetProperty(_FirstName, "Bob"));
 
             //Edges
-            var alice_bob = SemanticGraph.AddEdge(alice, bob, new EdgeId(1), "knows");
+            var _alice_bob = _SemanticGraph.AddEdge(_alice, _bob, new EdgeId(1), "knows");
+
+
+            // Some very simple traversals
+            foreach (var _Vertex in _SemanticGraph.Vertices)
+            {
+
+                foreach (var _Edge in _Vertex.OutEdges)
+                    Console.WriteLine("V({0}) --Fwd({1})-> V({2})", _Vertex.Id, _Edge.Id, _Edge.InVertex.Id);
+
+                foreach (var _Edge in _Vertex.InEdges)
+                    Console.WriteLine("V({0}) <~Bwd({1})~~ V({2})", _Vertex.Id, _Edge.Id, _Edge.OutVertex.Id);
+            
+            }
 
         }
 
