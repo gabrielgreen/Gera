@@ -64,6 +64,13 @@ namespace GeraTest
             
             }
 
+            Console.WriteLine("---------");
+
+            foreach (var _Edge in _SemanticGraph.Edges)
+            {
+                Console.WriteLine("V({0}) --Fwd({1})-> V({2})", _Edge.OutVertex.Id, _Edge.Id, _Edge.InVertex.Id);
+            }
+
         }
 
     }
