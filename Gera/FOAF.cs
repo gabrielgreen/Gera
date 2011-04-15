@@ -19,7 +19,7 @@
 
 using System;
 
-using de.ahzf.blueprints.Datastructures;
+using de.ahzf.blueprints;
 
 #endregion
 
