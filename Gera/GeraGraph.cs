@@ -96,11 +96,12 @@ namespace de.ahzf.Gera
 
                             (myEdges, myHyperEdgeId, myLabel, new SemanticPropertyKey("Id"), new SemanticPropertyKey("RevisionId"),
                              () => new Dictionary<SemanticPropertyKey, Object>(),
-                             () => new HashSet<IPropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
+                             () => new HashSet<IPropertyEdge<VertexId, RevisionId, SemanticPropertyKey, Object,
                                                              EdgeId,      RevisionId, SemanticPropertyKey, Object,
                                                              HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>(),
                              myHyperEdgePropertyInitializer
                             ),
+
 
                    // The vertices collection
                    new ConcurrentDictionary<VertexId,    IPropertyVertex    <VertexId,    RevisionId, SemanticPropertyKey, Object,
