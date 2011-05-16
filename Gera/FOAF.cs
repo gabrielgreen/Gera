@@ -19,7 +19,7 @@
 
 using System;
 
-using de.ahzf.blueprints.Datastructures;
+using de.ahzf.blueprints;
 
 #endregion
 
@@ -35,7 +35,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// The base Uri of the FOAF ontology.
         /// </summary>
-        public static readonly Uri Namespace = new Uri("http://xmlns.com/foaf/0.1");
+        public static readonly Uri Prefix = new Uri("http://xmlns.com/foaf/0.1");
 
         /// <summary>
         /// A homepage for something.
@@ -44,7 +44,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Homepage(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "homepage", myAlias);
+            return new SemanticPropertyKey(Prefix, "homepage", myAlias);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Knows(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "knows", myAlias);
+            return new SemanticPropertyKey(Prefix, "knows", myAlias);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Made(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "made", myAlias);
+            return new SemanticPropertyKey(Prefix, "made", myAlias);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Maker(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "maker", myAlias);
+            return new SemanticPropertyKey(Prefix, "maker", myAlias);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey MBox(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "mbox", myAlias);
+            return new SemanticPropertyKey(Prefix, "mbox", myAlias);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Member(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "member", myAlias);
+            return new SemanticPropertyKey(Prefix, "member", myAlias);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey PrimaryTopic(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "primaryTopic", myAlias);
+            return new SemanticPropertyKey(Prefix, "primaryTopic", myAlias);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Account(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "account", myAlias);
+            return new SemanticPropertyKey(Prefix, "account", myAlias);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey AccountName(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "accountName", myAlias);
+            return new SemanticPropertyKey(Prefix, "accountName", myAlias);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey AccountServiceHomepage(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "accountServiceHomepage", myAlias);
+            return new SemanticPropertyKey(Prefix, "accountServiceHomepage", myAlias);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Depiction(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "depiction", myAlias);
+            return new SemanticPropertyKey(Prefix, "depiction", myAlias);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Depicts(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "depicts", myAlias);
+            return new SemanticPropertyKey(Prefix, "depicts", myAlias);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey FamilyName(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "familyName", myAlias);
+            return new SemanticPropertyKey(Prefix, "familyName", myAlias);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey FirstName(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "firstName", myAlias);
+            return new SemanticPropertyKey(Prefix, "firstName", myAlias);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Gender(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "gender", myAlias);
+            return new SemanticPropertyKey(Prefix, "gender", myAlias);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey GivenName(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "givenName", myAlias);
+            return new SemanticPropertyKey(Prefix, "givenName", myAlias);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey ICQChatID(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "icqChatID", myAlias);
+            return new SemanticPropertyKey(Prefix, "icqChatID", myAlias);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Img(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "img", myAlias);
+            return new SemanticPropertyKey(Prefix, "img", myAlias);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Interest(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "interest", myAlias);
+            return new SemanticPropertyKey(Prefix, "interest", myAlias);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey JabberID(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "jabberID", myAlias);
+            return new SemanticPropertyKey(Prefix, "jabberID", myAlias);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey LastName(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "lastName", myAlias);
+            return new SemanticPropertyKey(Prefix, "lastName", myAlias);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Logo(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "logo", myAlias);
+            return new SemanticPropertyKey(Prefix, "logo", myAlias);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Name(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "name", myAlias);
+            return new SemanticPropertyKey(Prefix, "name", myAlias);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Nick(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "nick", myAlias);
+            return new SemanticPropertyKey(Prefix, "nick", myAlias);
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Phone(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "phone", myAlias);
+            return new SemanticPropertyKey(Prefix, "phone", myAlias);
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Thumbnail(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "thumbnail", myAlias);
+            return new SemanticPropertyKey(Prefix, "thumbnail", myAlias);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Title(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "title", myAlias);
+            return new SemanticPropertyKey(Prefix, "title", myAlias);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Topic(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "topic", myAlias);
+            return new SemanticPropertyKey(Prefix, "topic", myAlias);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey TopicInterest(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "topic_interest", myAlias);
+            return new SemanticPropertyKey(Prefix, "topic_interest", myAlias);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Weblog(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "weblog", myAlias);
+            return new SemanticPropertyKey(Prefix, "weblog", myAlias);
         }
 
         /// <summary>
@@ -353,7 +353,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey WorkInfoHomepage(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "workInfoHomepage", myAlias);
+            return new SemanticPropertyKey(Prefix, "workInfoHomepage", myAlias);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey WorkPlaceHomepage(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "workPlaceHomepage", myAlias);
+            return new SemanticPropertyKey(Prefix, "workPlaceHomepage", myAlias);
         }
 
         /// <summary>
@@ -374,7 +374,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Age(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "age", myAlias);
+            return new SemanticPropertyKey(Prefix, "age", myAlias);
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey Birthday(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "birthday", myAlias);
+            return new SemanticPropertyKey(Prefix, "birthday", myAlias);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace de.ahzf.Gera
         /// <returns>A semantic property key to be used within property graphs.</returns>
         public static SemanticPropertyKey MembershipClass(String myAlias)
         {
-            return new SemanticPropertyKey(Namespace, "membershipClass", myAlias);
+            return new SemanticPropertyKey(Prefix, "membershipClass", myAlias);
         }
 
     }
