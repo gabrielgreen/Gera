@@ -34,19 +34,19 @@ namespace de.ahzf.Gera
     /// A semantic property graph.
     /// </summary>
     public class GeraGraph : InMemoryGenericPropertyGraph<// Vertex definition
-                                                          VertexId,    RevisionId,
-                                                          SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                                          VertexId,    RevisionId, SemanticPropertyKey,
+                                                                               Object, IDictionary<SemanticPropertyKey, Object>,
 
-                                                          ICollection<IPropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                                    EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                                    HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>,
+                                                          ICollection<IPropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                                    EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                                    HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>,
                                                           
                                                           // Edge definition
-                                                          EdgeId,      RevisionId,
+                                                          EdgeId,      RevisionId, SemanticPropertyKey, 
                                                           SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
                                                           
                                                           // Hyperedge definition
-                                                          HyperEdgeId, RevisionId,
+                                                          HyperEdgeId, RevisionId, SemanticPropertyKey, 
                                                           SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>>
     {
 
@@ -56,28 +56,28 @@ namespace de.ahzf.Gera
         public GeraGraph()
             : base(// Create a new Vertex
                     (myVertexId, myVertexPropertyInitializer) =>
-                        new PropertyVertex<VertexId,    RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                           EdgeId,      RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                           HyperEdgeId, RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                        new PropertyVertex<VertexId,    RevisionId,                      SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                           EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                           HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
 
-                                           ICollection<IPropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                     EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                     HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>>
+                                           ICollection<IPropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                     EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                     HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>>
 
                             (myVertexId, new SemanticPropertyKey("Id"), new SemanticPropertyKey("RevisionId"),
                              () => new Dictionary<SemanticPropertyKey, Object>(),
-                             () => new HashSet<IPropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                             EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>(),
+                             () => new HashSet<IPropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                             EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>(),
                              myVertexPropertyInitializer
                             ),
 
                    
                    // Create a new Edge
                    (myOutVertex, myInVertex, myEdgeId, myLabel, myEdgePropertyInitializer) =>
-                        new PropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                         EdgeId,      RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                         HyperEdgeId, RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>>
+                        new PropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                         EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                         HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>>
 
                             (myOutVertex, myInVertex, myEdgeId, myLabel, new SemanticPropertyKey("Id"), new SemanticPropertyKey("RevisionId"),
                              () => new Dictionary<SemanticPropertyKey, Object>(),
@@ -86,37 +86,37 @@ namespace de.ahzf.Gera
 
                    // Create a new HyperEdge
                    (myEdges, myHyperEdgeId, myLabel, myHyperEdgePropertyInitializer) =>
-                       new PropertyHyperEdge<VertexId,    RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                             EdgeId,      RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
-                                             HyperEdgeId, RevisionId, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                       new PropertyHyperEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                             EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
+                                             HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object, IDictionary<SemanticPropertyKey, Object>,
 
-                                             ICollection<IPropertyEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                       EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                       HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>>
+                                             ICollection<IPropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                       EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                       HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>>
 
                             (myEdges, myHyperEdgeId, myLabel, new SemanticPropertyKey("Id"), new SemanticPropertyKey("RevisionId"),
                              () => new Dictionary<SemanticPropertyKey, Object>(),
-                             () => new HashSet<IPropertyEdge<VertexId, RevisionId, SemanticPropertyKey, Object,
-                                                             EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>(),
+                             () => new HashSet<IPropertyEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                             EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>(),
                              myHyperEdgePropertyInitializer
                             ),
 
 
                    // The vertices collection
-                   new ConcurrentDictionary<VertexId,    IPropertyVertex    <VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                             EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>(),
+                   new ConcurrentDictionary<VertexId,    IPropertyVertex    <VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                             EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                             HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>(),
 
                    // The edges collection
-                   new ConcurrentDictionary<EdgeId,      IPropertyEdge     <VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                            EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                            HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>(),
+                   new ConcurrentDictionary<EdgeId,      IPropertyEdge     <VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                            EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                            HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>(),
 
                    // The hyperedges collection
-                   new ConcurrentDictionary<HyperEdgeId, IPropertyHyperEdge<VertexId,    RevisionId, SemanticPropertyKey, Object,
-                                                                            EdgeId,      RevisionId, SemanticPropertyKey, Object,
-                                                                            HyperEdgeId, RevisionId, SemanticPropertyKey, Object>>()
+                   new ConcurrentDictionary<HyperEdgeId, IPropertyHyperEdge<VertexId,    RevisionId,                      SemanticPropertyKey, Object,
+                                                                            EdgeId,      RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object,
+                                                                            HyperEdgeId, RevisionId, SemanticPropertyKey, SemanticPropertyKey, Object>>()
 
               )
 
