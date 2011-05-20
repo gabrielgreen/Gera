@@ -20,7 +20,7 @@
 using System;
 
 using de.ahzf.Gera;
-using de.ahzf.blueprints;
+using de.ahzf.Blueprints;
 
 #endregion
 
