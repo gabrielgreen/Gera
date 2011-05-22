@@ -19,8 +19,8 @@
 
 using System;
 
-using de.ahzf.Gera;
 using de.ahzf.Blueprints;
+using de.ahzf.Gera;
 
 #endregion
 
@@ -48,7 +48,7 @@ namespace GeraTest
             var _alice = _SemanticGraph.AddVertex(new VertexId(1), v => v.SetProperty(_FirstName, "Alice"));
             var _bob   = _SemanticGraph.AddVertex(new VertexId(2), v => v.SetProperty(_FirstName, "Bob"));
 
-            var _Kennt = new SemanticPropertyKey(new Uri("http://xmlns.com/foaf/0.1"), "knows", "kennt");
+            var _Kennt = new SemanticProperty(new Uri("http://xmlns.com/foaf/0.1"), "knows", "kennt");
 
             //Edges
             var _alice_bob = _SemanticGraph.AddEdge(_alice, _bob, new EdgeId(1), _Kennt);

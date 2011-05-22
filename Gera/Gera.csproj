@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,15 +47,34 @@
     <Compile Include="FOAF.cs" />
     <Compile Include="GeraGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="REST\IGeraService.cs" />
+    <Compile Include="REST\GeraServer.cs" />
+    <Compile Include="REST\GeraService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\blueprints.NET\blueprints\blueprints.csproj">
+    <ProjectReference Include="..\..\BlueprintPipes.NET\BlueprintPipes\BlueprintPipes.csproj">
+      <Project>{6BDAAB41-73D0-4899-A184-F10B3403BAFD}</Project>
+      <Name>BlueprintPipes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Blueprints.NET\blueprints\Blueprints.csproj">
       <Project>{B9DE4181-416E-4DE4-A983-B90FC9412774}</Project>
-      <Name>blueprints</Name>
+      <Name>Blueprints</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\blueprints.NET\InMemoryGraph\InMemoryGraph.csproj">
       <Project>{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}</Project>
       <Name>InMemoryGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BlueQuad.NET\BlueQuad\BlueQuad.csproj">
+      <Project>{073E08F9-CA23-4E08-B18F-644DC0DC91D7}</Project>
+      <Name>BlueQuad</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
+      <Project>{EAB20045-3D15-4220-BB56-B22FF6630AC9}</Project>
+      <Name>Hermod</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Pipes.NET\Pipes\Pipes.csproj">
+      <Project>{3949790D-8591-4101-9E4D-CE7A758E7409}</Project>
+      <Name>Pipes</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
