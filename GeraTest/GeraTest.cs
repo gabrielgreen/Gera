@@ -33,7 +33,7 @@ namespace GeraTest
         public static void Main(String[] myArgs)
         {
 
-            var _SemanticGraph = new GeraGraph();
+            var _SemanticGraph = new GeraGraph(new VertexId("GeraGraph"));
 
             // Vertex properties
             var _FirstName = FOAF.FirstName("FirstName");

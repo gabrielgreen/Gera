@@ -53,8 +53,17 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Creates a new semantic property graph.
         /// </summary>
-        public GeraGraph()
-            : base(// Create a new Vertex
+        public GeraGraph(VertexId GraphId,
+                         Action<IPropertyGraph<VertexId,    RevisionId,                   SemanticProperty, Object,
+                                               EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
+                                               HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>> GraphInitializer = null)
+
+            : base (GraphId,
+                    new SemanticProperty("Id"),
+                    new SemanticProperty("RevId"),
+                    () => new Dictionary<SemanticProperty, Object>(),
+
+                    // Create a new Vertex
                     (myVertexId, myVertexPropertyInitializer) =>
                         new PropertyVertex<VertexId,    RevisionId,                      SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
                                            EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
@@ -116,9 +125,9 @@ namespace de.ahzf.Gera
                    // The hyperedges collection
                    new ConcurrentDictionary<HyperEdgeId, IPropertyHyperEdge<VertexId,    RevisionId,                      SemanticProperty, Object,
                                                                             EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
-                                                                            HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>>()
+                                                                            HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>>(),
 
-              )
+                   GraphInitializer)
 
 
         { }
