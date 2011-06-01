@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BlueprintPipes.NET\BlueprintPipes\BlueprintPipes.csproj">
+      <Project>{6BDAAB41-73D0-4899-A184-F10B3403BAFD}</Project>
+      <Name>BlueprintPipes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Blueprints.NET\blueprints\Blueprints.csproj">
       <Project>{B9DE4181-416E-4DE4-A983-B90FC9412774}</Project>
       <Name>Blueprints</Name>
@@ -55,6 +59,10 @@
     <ProjectReference Include="..\..\blueprints.NET\InMemoryGraph\InMemoryGraph.csproj">
       <Project>{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}</Project>
       <Name>InMemoryGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Pipes.NET\Pipes\Pipes.csproj">
+      <Project>{3949790D-8591-4101-9E4D-CE7A758E7409}</Project>
+      <Name>Pipes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gera\Gera.csproj">
       <Project>{26D01FA6-EFB8-4910-969F-F02303B0F985}</Project>
