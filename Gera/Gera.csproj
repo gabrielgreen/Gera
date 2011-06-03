@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GDB.cs" />
     <Compile Include="FOAF.cs" />
     <Compile Include="GeraGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

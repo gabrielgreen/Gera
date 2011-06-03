@@ -59,8 +59,8 @@ namespace de.ahzf.Gera
                                                HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>> GraphInitializer = null)
 
             : base (GraphId,
-                    new SemanticProperty("Id"),
-                    new SemanticProperty("RevId"),
+                    GDB.Id(),
+                    GDB.RevId(),
                     () => new Dictionary<SemanticProperty, Object>(),
 
                     // Create a new Vertex
@@ -73,7 +73,7 @@ namespace de.ahzf.Gera
                                                                      EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
                                                                      HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>>>
 
-                            (myVertexId, new SemanticProperty("Id"), new SemanticProperty("RevisionId"),
+                            (myVertexId, GDB.Id(), GDB.RevId(),
                              () => new Dictionary<SemanticProperty, Object>(),
                              () => new HashSet<IPropertyEdge<VertexId,    RevisionId,                      SemanticProperty, Object,
                                                              EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
@@ -88,7 +88,7 @@ namespace de.ahzf.Gera
                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
                                          HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>>
 
-                            (myOutVertex, myInVertex, myEdgeId, myLabel, new SemanticProperty("Id"), new SemanticProperty("RevisionId"),
+                            (myOutVertex, myInVertex, myEdgeId, myLabel, GDB.Id(), GDB.RevId(),
                              () => new Dictionary<SemanticProperty, Object>(),
                              myEdgePropertyInitializer
                             ),
@@ -103,7 +103,7 @@ namespace de.ahzf.Gera
                                                                        EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
                                                                        HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>>>
 
-                            (myEdges, myHyperEdgeId, myLabel, new SemanticProperty("Id"), new SemanticProperty("RevisionId"),
+                            (myEdges, myHyperEdgeId, myLabel, GDB.Id(), GDB.RevId(),
                              () => new Dictionary<SemanticProperty, Object>(),
                              () => new HashSet<IPropertyEdge<VertexId,    RevisionId,                      SemanticProperty, Object,
                                                              EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,

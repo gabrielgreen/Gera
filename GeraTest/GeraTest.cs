@@ -79,7 +79,11 @@ namespace GeraTest
             }
 
 
-            var _AllFoaf = _SemanticGraph.V().Out(_knows).Out(_knows).ToList();
+            var _AllFoaf1 = _SemanticGraph.V().Out(_knows).Out(_knows).Prop(_FirstName).Cast<String>().ToList();
+
+            // ToDo: Would be nice if the result would be a n-tuple.
+            var _AllFoaf2 = _SemanticGraph.V().Out(_knows).Out(_knows).Prop(GDB.Id(), _FirstName).ToList();
+
 
             var _Pipeline = new Pipeline<IPropertyVertex<VertexId,    RevisionId,                   SemanticProperty, Object,
                                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
