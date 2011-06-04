@@ -60,6 +60,10 @@
       <Project>{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}</Project>
       <Name>InMemoryGraph</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
+      <Project>{EAB20045-3D15-4220-BB56-B22FF6630AC9}</Project>
+      <Name>Hermod</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Pipes.NET\Pipes\Pipes.csproj">
       <Project>{3949790D-8591-4101-9E4D-CE7A758E7409}</Project>
       <Name>Pipes</Name>

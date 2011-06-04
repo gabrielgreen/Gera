@@ -59,7 +59,9 @@ namespace de.ahzf.Gera
 
         #endregion
 
-        #region Graphs
+        #region Accounts
+
+        private IDictionary<String, Account> _Accounts;
 
         #endregion
 
@@ -80,7 +82,8 @@ namespace de.ahzf.Gera
             //_Graphs               = new ConcurrentDictionary<String, IGraph>();
             //_AutoDiscoveryIGraphs = new AutoDiscoveryIGraphs();
 
-            //base.OnNewHTTPService += GeraService => { GeraService.Graphs = _Graphs; };
+            base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
+            _Accounts = new Dictionary<String, Account>();
 
         }
 
@@ -101,7 +104,7 @@ namespace de.ahzf.Gera
             //_Graphs               = new ConcurrentDictionary<String, IGraph>();
             //_AutoDiscoveryIGraphs = new AutoDiscoveryIGraphs();
 
-            //base.OnNewHTTPService += GeraService => { GeraService.Graphs = _Graphs; };
+            base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
 
         }
 
@@ -123,7 +126,7 @@ namespace de.ahzf.Gera
             //_Graphs               = new ConcurrentDictionary<String, IGraph>();
             //_AutoDiscoveryIGraphs = new AutoDiscoveryIGraphs();
 
-            //base.OnNewHTTPService += GeraService => { GeraService.Graphs = _Graphs; };
+            base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
 
         }
 
@@ -144,7 +147,7 @@ namespace de.ahzf.Gera
             //_Graphs               = new ConcurrentDictionary<String, IGraph>();
             //_AutoDiscoveryIGraphs = new AutoDiscoveryIGraphs();
 
-            //base.OnNewHTTPService += GeraService => { GeraService.Graphs = _Graphs; };
+            base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
 
         }
 
@@ -152,6 +155,13 @@ namespace de.ahzf.Gera
 
         #endregion
 
+
+        public Account CreateAccount(String AccountId)
+        {
+            var _Account = new Account(AccountId);
+            this._Accounts.Add(_Account.Id, _Account);
+            return _Account;
+        }
 
 
         //#region this[myGraphname]

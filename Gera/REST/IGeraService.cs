@@ -34,14 +34,21 @@ namespace de.ahzf.Gera
     public interface IGeraService : IHTTPService
     {
 
+        /// <summary>
+        /// Account Information
+        /// </summary>
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.GET, "/")]
+        HTTPResponse GetLandingpage();
+
         #region Account
 
         /// <summary>
         /// Account Information
         /// </summary>
-        //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.GET, "/Accounts")]
-        //HTTPResponse ListAccountIds();
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.GET, "/Accounts")]
+        HTTPResponse ListAccountIds();
 
         /// <summary>
         /// Create a Account
@@ -120,9 +127,9 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Repository list
         /// </summary>
-        //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.GET, "/{AccountId}/repositories")]
-        //HTTPResponse ListRepositories(String AccountId);
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.GET, "/{AccountId}/repositories")]
+        HTTPResponse ListRepositories(String AccountId);
 
         /// <summary>
         /// Create a repository

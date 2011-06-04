@@ -51,6 +51,8 @@
     <Compile Include="REST\IGeraService.cs" />
     <Compile Include="REST\GeraServer.cs" />
     <Compile Include="REST\GeraService.cs" />
+    <Compile Include="stuff\Account.cs" />
+    <Compile Include="stuff\Repository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Balder\Balder\Balder.csproj">

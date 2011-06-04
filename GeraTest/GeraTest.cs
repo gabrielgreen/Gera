@@ -26,6 +26,7 @@ using de.ahzf.Pipes;
 using de.ahzf.Pipes.ExtensionMethods;
 using de.ahzf.Balder.ExtensionMethods;
 using de.ahzf.Gera;
+using System.Threading;
 
 #endregion
 
@@ -38,7 +39,10 @@ namespace GeraTest
         public static void Main(String[] myArgs)
         {
 
-            var _SemanticGraph = new GeraGraph(new VertexId("GeraGraph"));
+            var _GeraServer    = new GeraServer();
+            var _Account1      = _GeraServer.CreateAccount("Account1");
+            var _Repository1   = _Account1.CreateRepository("Repository1");
+            var _SemanticGraph = _Repository1.CreateGraph(new VertexId("GeraGraph"));
 
             // Vertex properties
             var _FirstName = FOAF.FirstName("FirstName");
@@ -96,7 +100,10 @@ namespace GeraTest
 
             var _FriendsFriends = _Pipeline.SetSource(_Alice).ToList();
 
-
+            while (true)
+            {
+                Thread.Sleep(100);
+            }
 
         }
 

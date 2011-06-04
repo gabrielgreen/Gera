@@ -56,7 +56,9 @@ namespace de.ahzf.Gera
 
         #endregion
 
-        #region Graphs
+        #region Accounts
+
+        public IDictionary<String, Account> Accounts { get; internal set; }
 
         #endregion
 
@@ -177,6 +179,98 @@ namespace de.ahzf.Gera
 
         #endregion
 
+
+        #region GetLandingpage()
+
+        public HTTPResponse GetLandingpage()
+        {
+
+            var _RequestHeader = IHTTPConnection.RequestHeader;
+            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("Hello world!", str => str.AppendLine("<br><a href=\"/Accounts\">List AccountIds</a>")));
+
+            return new HTTPResponse(
+
+                new HTTPResponseHeader()
+                {
+                    HttpStatusCode = HTTPStatusCode.OK,
+                    CacheControl   = "no-cache",
+                    ContentLength  = (UInt64)_Content.Length,
+                    ContentType    = HTTPContentType.HTML_UTF8
+                },
+
+                _Content
+
+            );
+
+        }
+
+        #endregion
+
+        #region ListAccountIds()
+
+        public HTTPResponse ListAccountIds()
+        {
+
+            var _RequestHeader = IHTTPConnection.RequestHeader;
+            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("List Account Ids...",
+                
+                str => {
+                    foreach (var _Account in Accounts)
+                        str.AppendLine("<br><a href=\"/" + _Account.Key + "/repositories\">" + _Account.Key + "</a><br>");
+                   }   
+                ));
+
+            return new HTTPResponse(
+
+                new HTTPResponseHeader()
+                {
+                    HttpStatusCode = HTTPStatusCode.OK,
+                    CacheControl   = "no-cache",
+                    ContentLength  = (UInt64)_Content.Length,
+                    ContentType    = HTTPContentType.HTML_UTF8
+                },
+
+                _Content
+
+            );
+
+        }
+
+        #endregion
+
+        #region ListRepositories()
+
+        public HTTPResponse ListRepositories(String AccountId)
+        {
+
+            var _RequestHeader = IHTTPConnection.RequestHeader;
+            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("List Repository Ids...",
+                
+                str => {
+                    foreach (var _Repo in Accounts[AccountId])
+                        str.AppendLine("<br><a href=\"/Accounts/" + AccountId + "/" + _Repo.Key + "\">" + _Repo.Key + "</a><br>");
+                   }   
+                ));
+
+            return new HTTPResponse(
+
+                new HTTPResponseHeader()
+                {
+                    HttpStatusCode = HTTPStatusCode.OK,
+                    CacheControl   = "no-cache",
+                    ContentLength  = (UInt64)_Content.Length,
+                    ContentType    = HTTPContentType.HTML_UTF8
+                },
+
+                _Content
+
+            );
+
+        }
+
+        #endregion
+
+        
 
 
         #region GetResources(myResource)
