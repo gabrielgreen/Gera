@@ -53,6 +53,8 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Creates a new semantic property graph.
         /// </summary>
+        /// <param name="GraphId">The identification of this graph.</param>
+        /// <param name="GraphInitializer">A delegate to initialize the newly created graph.</param>
         public GeraGraph(VertexId GraphId,
                          Action<IPropertyGraph<VertexId,    RevisionId,                   SemanticProperty, Object,
                                                EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
