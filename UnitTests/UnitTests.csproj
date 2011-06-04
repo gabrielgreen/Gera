@@ -49,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Balder\Balder\Balder.csproj">
+      <Project>{D2B4E7C7-0524-4DE5-9D62-2DE05682A74D}</Project>
+      <Name>Balder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\blueprints.NET\InMemoryGraph\InMemoryGraph.csproj">
       <Project>{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}</Project>
       <Name>InMemoryGraph</Name>

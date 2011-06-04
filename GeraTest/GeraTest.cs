@@ -24,7 +24,7 @@ using de.ahzf.Blueprints;
 using de.ahzf.Blueprints.PropertyGraph;
 using de.ahzf.Pipes;
 using de.ahzf.Pipes.ExtensionMethods;
-using de.ahzf.BlueprintPipes.ExtensionMethods;
+using de.ahzf.Balder.ExtensionMethods;
 using de.ahzf.Gera;
 
 #endregion
