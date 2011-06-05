@@ -41,7 +41,8 @@ namespace de.ahzf.Gera
     /// <summary>
     /// The Gera service implementation.
     /// </summary>
-    public class GeraService : IGeraService
+    [HTTPImplementation(ContentType: "text/html")]
+    public class GeraService_HTML : IGeraService
     {
 
         
@@ -72,7 +73,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Creates a new GeraService.
         /// </summary>
-        public GeraService()
+        public GeraService_HTML()
         { }
 
         #endregion
@@ -83,7 +84,7 @@ namespace de.ahzf.Gera
         /// Creates a new GeraService.
         /// </summary>
         /// <param name="myIHTTPConnection">The http connection for this request.</param>
-        public GeraService(IHTTPConnection myIHTTPConnection)
+        public GeraService_HTML(IHTTPConnection myIHTTPConnection)
         {
             IHTTPConnection = myIHTTPConnection;
         }

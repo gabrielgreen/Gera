@@ -24,6 +24,7 @@ using System.Collections.Concurrent;
 using de.ahzf.Blueprints;
 using de.ahzf.Hermod.HTTP;
 using de.ahzf.Hermod.Datastructures;
+using de.ahzf.Blueprints.Tools;
 
 #endregion
 
@@ -33,7 +34,7 @@ namespace de.ahzf.Gera
     /// <summary>
     /// A tcp/http based rexster server.
     /// </summary>
-    public class GeraServer : HTTPServer<GeraService>
+    public class GeraServer : HTTPServer<GeraService_HTML>
     {
 
         #region Data
@@ -84,6 +85,8 @@ namespace de.ahzf.Gera
 
             base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
             _Accounts = new Dictionary<VertexId, Account>();
+
+            var a = new AutoDiscovery<IGeraService>();
 
         }
 
@@ -162,6 +165,8 @@ namespace de.ahzf.Gera
             this._Accounts.Add(_Account.Id, _Account);
             return _Account;
         }
+
+         
 
 
         //#region this[myGraphname]
