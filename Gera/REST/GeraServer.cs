@@ -61,7 +61,7 @@ namespace de.ahzf.Gera
 
         #region Accounts
 
-        private IDictionary<String, Account> _Accounts;
+        private IDictionary<VertexId, Account> _Accounts;
 
         #endregion
 
@@ -83,7 +83,7 @@ namespace de.ahzf.Gera
             //_AutoDiscoveryIGraphs = new AutoDiscoveryIGraphs();
 
             base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
-            _Accounts = new Dictionary<String, Account>();
+            _Accounts = new Dictionary<VertexId, Account>();
 
         }
 
@@ -156,7 +156,7 @@ namespace de.ahzf.Gera
         #endregion
 
 
-        public Account CreateAccount(String AccountId)
+        public Account CreateAccount(VertexId AccountId)
         {
             var _Account = new Account(AccountId);
             this._Accounts.Add(_Account.Id, _Account);

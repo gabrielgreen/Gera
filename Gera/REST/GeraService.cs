@@ -31,6 +31,7 @@ using de.ahzf.Hermod.HTTP;
 using de.ahzf.Hermod.HTTP.Common;
 
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 #endregion
 
@@ -58,7 +59,7 @@ namespace de.ahzf.Gera
 
         #region Accounts
 
-        public IDictionary<String, Account> Accounts { get; internal set; }
+        public IDictionary<VertexId, Account> Accounts { get; internal set; }
 
         #endregion
 
@@ -99,9 +100,9 @@ namespace de.ahzf.Gera
         /// A little HTML genereator...
         /// </summary>
         /// <param name="myHeadline"></param>
-        /// <param name="myFunc"></param>
+        /// <param name="AddHTMLAction"></param>
         /// <returns></returns>
-        private String HTMLBuilder(String myHeadline, Action<StringBuilder> myFunc)
+        private String HTMLBuilder(String myHeadline, Action<StringBuilder> AddHTMLAction = null)
         {
 
             var _StringBuilder = new StringBuilder();
@@ -120,7 +121,8 @@ namespace de.ahzf.Gera
             _StringBuilder.AppendLine("<td style=\"width: 100px\">&nbsp;</td>");
             _StringBuilder.AppendLine("<td>");
 
-            myFunc(_StringBuilder);
+            if (AddHTMLAction != null)
+                AddHTMLAction(_StringBuilder);
 
             _StringBuilder.AppendLine("</td>");
             _StringBuilder.AppendLine("</tr>");
@@ -179,14 +181,70 @@ namespace de.ahzf.Gera
 
         #endregion
 
+        #region (private) IsValidAccountId(AccountId)
+
+        private Boolean IsValidAccountId(String AccountId)
+        {
+
+            if (AccountId == "Account")
+                return false;
+
+            if (AccountId == "Accounts")
+                return false;
+
+            if (AccountId == "resources")
+                return false;
+
+            return true;
+
+        }
+
+        #endregion
+
+        #region (private) IsValidAccountId(VertexId)
+
+        private Boolean IsValidAccountId(VertexId VertexId)
+        {
+            return IsValidAccountId(VertexId.ToString());
+        }
+
+        #endregion
+
+
 
         #region GetLandingpage()
 
+        /// <summary>
+        /// The HTML landing page.
+        /// </summary>
         public HTTPResponse GetLandingpage()
         {
 
             var _RequestHeader = IHTTPConnection.RequestHeader;
-            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("Hello world!", str => str.AppendLine("<br><a href=\"/Accounts\">List AccountIds</a>")));
+            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("Hello world!",
+                    str => str.AppendLine("<a href=\"/Accounts\">List AccountIds</a><br />").
+                               AppendLine("<script type=\"text/javascript\" src=\"resources/jQuery/jquery-1.6.1.min.js\"></script>").
+                               AppendLine("<script type=\"text/javascript\">").
+                               AppendLine("  function CreateNewAccount() {").
+                               AppendLine("    jQuery.ajax({").
+                               AppendLine("        type:     \"put\",").
+                               AppendLine("        url:      \"/Account/\" + $(\"#NewAccountForm input[name=NewAccountId]\").val(),").
+                               AppendLine("        dataType: \"json\",").
+                               AppendLine("        async:    false,").
+                               AppendLine("        success:  function(msg) { $(\"#infoarea\").html(\" <a href=\\\"/Account/\" + msg.AccountId + \" \\\">\" + msg.AccountId + \"</a>\");},").
+                               AppendLine("        error:    function(msg) { alert(\"error: \" + msg); },").
+                               AppendLine("        });").
+                               AppendLine("  }").
+                               AppendLine("</script>").
+                               AppendLine("<form action=\"/Accounts\" method=\"post\">").
+                               AppendLine(  "<input id=\"Senden\" type=\"submit\" name=\"senden\" value=\"Create random account\" />").
+                               AppendLine("</form><br />").
+                               AppendLine("<form id=\"NewAccountForm\" action=\"javascript:CreateNewAccount()\">").
+                               AppendLine(  "<input id=\"NewAccountId\" type=\"text\" name=\"NewAccountId\" />").
+                               AppendLine(  "<input id=\"Senden\" type=\"submit\" name=\"senden\" value=\"Create new account\" />").
+                               AppendLine("</form><br />").
+                               AppendLine("<div id=\"infoarea\"></div>")
+                ));
 
             return new HTTPResponse(
 
@@ -208,17 +266,23 @@ namespace de.ahzf.Gera
 
         #region ListAccountIds()
 
-        public HTTPResponse ListAccountIds()
+        /// <summary>
+        /// Return a list of valid accounts.
+        /// </summary>
+        public HTTPResponse ListValidAccounts()
         {
 
             var _RequestHeader = IHTTPConnection.RequestHeader;
             var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("List Account Ids...",
-                
-                str => {
-                    foreach (var _Account in Accounts)
-                        str.AppendLine("<br><a href=\"/" + _Account.Key + "/repositories\">" + _Account.Key + "</a><br>");
-                   }   
-                ));
+                                     _StringBuilder => {
+
+                                         foreach (var _Account in Accounts)
+                                             _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Key + "\">" + _Account.Key + "</a><br />");
+
+                                         _StringBuilder.AppendLine("<br /><a href=\"/\">back</a><br />");
+
+                                     }
+                                 ));
 
             return new HTTPResponse(
 
@@ -226,7 +290,7 @@ namespace de.ahzf.Gera
                 {
                     HttpStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
-                    ContentLength  = (UInt64)_Content.Length,
+                    ContentLength  = (UInt64) _Content.Length,
                     ContentType    = HTTPContentType.HTML_UTF8
                 },
 
@@ -238,19 +302,23 @@ namespace de.ahzf.Gera
 
         #endregion
 
-        #region ListRepositories()
+        #region CreateNewRandomAccount()
 
-        public HTTPResponse ListRepositories(String AccountId)
+        /// <summary>
+        /// Create a new account using a random AccountId.
+        /// </summary>
+        public HTTPResponse CreateNewRandomAccount()
         {
 
+            var _NewAccountId = VertexId.NewVertexId;
+            var _Account = new Account(_NewAccountId);
+            this.Accounts.Add(_Account.Id, _Account);
+
             var _RequestHeader = IHTTPConnection.RequestHeader;
-            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("List Repository Ids...",
-                
-                str => {
-                    foreach (var _Repo in Accounts[AccountId])
-                        str.AppendLine("<br><a href=\"/Accounts/" + AccountId + "/" + _Repo.Key + "\">" + _Repo.Key + "</a><br>");
-                   }   
-                ));
+            var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
+                               _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _NewAccountId.ToString() + "\">" + _NewAccountId.ToString() + "</a><br />").
+                                                                AppendLine("<br /><a href=\"/\">back</a><br />")
+                           ));
 
             return new HTTPResponse(
 
@@ -258,13 +326,251 @@ namespace de.ahzf.Gera
                 {
                     HttpStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
-                    ContentLength  = (UInt64)_Content.Length,
+                    ContentLength  = (UInt64) _Content.Length,
                     ContentType    = HTTPContentType.HTML_UTF8
                 },
 
                 _Content
 
             );
+
+        }
+
+        #endregion
+
+        #region CreateNewAccount()
+
+        /// <summary>
+        /// Create a new account using the given AccountId.
+        /// </summary>
+        /// <param name="AccountId">A valid AccountId.</param>
+        public HTTPResponse CreateNewAccount(String AccountId)
+        {
+
+            #region Not a valid AccountId
+
+            if (!IsValidAccountId(AccountId))
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.BadRequest,
+                        CacheControl   = "no-cache",
+                    }
+                );
+            }
+
+            #endregion
+
+            var _NewAccountId = new VertexId(AccountId);
+
+            if (!Accounts.ContainsKey(_NewAccountId))
+            {
+
+                var _Account = new Account(_NewAccountId);
+                this.Accounts.Add(_Account.Id, _Account);
+
+                var _RequestHeader = IHTTPConnection.RequestHeader;
+                Byte[]          _Content;
+                HTTPContentType _HTTPContentType;
+
+                var _Accept = _RequestHeader.GetBestMatchingAcceptHeader(HTTPContentType.JSON_UTF8, HTTPContentType.HTML_UTF8);
+
+                if (_Accept == HTTPContentType.JSON_UTF8)
+                {
+                    _Content         = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new {
+                                           AccountId = _NewAccountId.ToString()
+                                       }));
+                    _HTTPContentType = HTTPContentType.JSON_UTF8;
+                }
+                else
+                {
+                    _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
+                                      _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _NewAccountId.ToString() + "\">" + _NewAccountId.ToString() + "</a><br />").
+                                                                       AppendLine("<br /><a href=\"/\">back</a><br />")
+                                  ));
+                    _HTTPContentType = HTTPContentType.JSON_UTF8;
+                }
+
+                return new HTTPResponse(
+
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.OK,
+                        CacheControl   = "no-cache",
+                        ContentLength  = (UInt64) _Content.Length,
+                        ContentType    = _HTTPContentType
+                    },
+
+                    _Content
+
+                );
+
+            }
+
+
+            #region ...or conflict!
+
+            else
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.Conflict,
+                        CacheControl   = "no-cache",
+                    }
+                );
+            }
+
+            #endregion
+
+        }
+
+        #endregion
+
+        #region GetAccountInformation(AccountId)
+
+        /// <summary>
+        ///  Get information on the given account.
+        /// </summary>
+        /// <param name="AccountId">A valid AccountId.</param>
+        public HTTPResponse GetAccountInformation(String AccountId)
+        {
+
+            Account _Account;
+            var     _AccountId = new VertexId(AccountId);
+
+            if (Accounts.TryGetValue(_AccountId, out _Account))
+            {
+
+                var _RequestHeader = IHTTPConnection.RequestHeader;
+                
+                var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Information...",
+                                   _StringBuilder => {
+
+                                       _StringBuilder.AppendLine("<table>").
+                                                      AppendLine("<tr><td>AccountId:</td><td>" + AccountId.ToString() + "</td></tr>");
+                        
+                                       var _RepositoryCount = _Account.Count();
+
+                                       if (_RepositoryCount > 0)
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + Accounts.Count + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+
+                                       if (_RepositoryCount > 1)
+                                       {
+                                           var _Array = _Account.ToArray();
+                                           for(var _Repo = 1; _Repo<_RepositoryCount; _Repo++)
+                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _Array[_Repo].Value.Id + "\">" + _Array[_Repo].Value.Id + "</a></td></tr>");
+                                       }
+
+                                   }
+                               ));
+
+                return new HTTPResponse(
+
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.OK,
+                        CacheControl   = "no-cache",
+                        ContentLength  = (UInt64) _Content.Length,
+                        ContentType    = HTTPContentType.HTML_UTF8
+                    },
+
+                    _Content
+
+                );
+
+            }
+
+
+            #region ...invalid AccountId!
+
+            else
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.NotFound,
+                        CacheControl   = "no-cache",
+                        ContentLength  = 0,
+                    }
+                );
+            }
+
+            #endregion
+
+        }
+
+        #endregion
+
+
+        
+        #region ListRepositories()
+
+        public HTTPResponse ListRepositories(String AccountId)
+        {
+
+            Account _Account;
+            var     _AccountId = new VertexId(AccountId);
+
+            if (Accounts.TryGetValue(_AccountId, out _Account))
+            {
+
+                var _RequestHeader = IHTTPConnection.RequestHeader;
+                
+                var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("List Repositories...",
+                                   _StringBuilder => {
+
+                                       _StringBuilder.AppendLine("<table>").
+                                                      AppendLine("<tr><td>AccountId:</td><td>" + AccountId.ToString() + "</td></tr>");
+                        
+                                       var _RepositoryCount = _Account.Count();
+
+                                       if (_RepositoryCount > 0)
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + Accounts.Count + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+
+                                       if (_RepositoryCount > 1)
+                                       {
+                                           var _Array = _Account.ToArray();
+                                           for(var _Repo = 1; _Repo<_RepositoryCount; _Repo++)
+                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _Array[_Repo].Value.Id + "\">" + _Array[_Repo].Value.Id + "</a></td></tr>");
+                                       }
+
+                                   }
+                               ));
+
+                return new HTTPResponse(
+
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.OK,
+                        CacheControl   = "no-cache",
+                        ContentLength  = (UInt64) _Content.Length,
+                        ContentType    = HTTPContentType.HTML_UTF8
+                    },
+
+                    _Content
+
+                );
+
+            }
+
+
+            #region ...invalid AccountId!
+
+            else
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.NotFound,
+                        CacheControl   = "no-cache",
+                        ContentLength  = 0,
+                    }
+                );
+            }
+
+            #endregion
 
         }
 

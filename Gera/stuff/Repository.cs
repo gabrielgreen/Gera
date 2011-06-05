@@ -33,11 +33,11 @@ namespace de.ahzf.Gera
     public class Repository
     {
 
-        public String Id { get; private set; }
+        public VertexId Id { get; private set; }
         private IDictionary<VertexId, GeraGraph> _Graphs;
 
 
-        public Repository(String Id)
+        public Repository(VertexId Id)
         {
             this.Id = Id;
             this._Graphs = new Dictionary<VertexId, GeraGraph>();

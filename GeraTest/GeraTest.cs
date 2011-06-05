@@ -40,8 +40,8 @@ namespace GeraTest
         {
 
             var _GeraServer    = new GeraServer();
-            var _Account1      = _GeraServer.CreateAccount("Account1");
-            var _Repository1   = _Account1.CreateRepository("Repository1");
+            var _Account1      = _GeraServer.CreateAccount(new VertexId("Account1"));
+            var _Repository1   = _Account1.CreateRepository(new VertexId("Repository1"));
             var _SemanticGraph = _Repository1.CreateGraph(new VertexId("GeraGraph"));
 
             // Vertex properties

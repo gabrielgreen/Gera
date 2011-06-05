@@ -34,8 +34,10 @@ namespace de.ahzf.Gera
     public interface IGeraService : IHTTPService
     {
 
+        // HTTP-Methods: LINK / UNLINK
+
         /// <summary>
-        /// Account Information
+        /// The HTML landing page.
         /// </summary>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/")]
@@ -44,32 +46,42 @@ namespace de.ahzf.Gera
         #region Account
 
         /// <summary>
-        /// Account Information
+        /// Return a list of valid accounts.
         /// </summary>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/Accounts")]
-        HTTPResponse ListAccountIds();
+        HTTPResponse ListValidAccounts();
 
         /// <summary>
-        /// Create a Account
+        /// Create a new account using a random AccountId.
         /// </summary>
-        //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.PUT, "/Accounts/{AccountId}")]
-        //HTTPResponse CreateAccount(String AccountId);
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.POST, "/Accounts")]
+        HTTPResponse CreateNewRandomAccount();
         // include metadata map!
 
         /// <summary>
-        /// Account Information
+        /// Create a new account using the given AccountId.
         /// </summary>
-        //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.GET, "/Accounts/{AccountId}")]
-        //HTTPResponse GetAccountInformation(String AccountId);
+        /// <param name="AccountId">A valid AccountId.</param>
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.PUT, "/Account/{AccountId}")]
+        HTTPResponse CreateNewAccount(String AccountId);
+        // include metadata map!
+
+        /// <summary>
+        /// Get information on the given account.
+        /// </summary>
+        /// <param name="AccountId">A valid AccountId.</param>
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.GET, "/Account/{AccountId}")]
+        HTTPResponse GetAccountInformation(String AccountId);
 
         /// <summary>
         /// Delete a Account
         /// </summary>
         //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.DELETE, "/Accounts/{AccountId}")]
+        //[HTTPMapping(HTTPMethods.DELETE, "/Account/{AccountId}")]
         //HTTPResponse DeleteAccount(String AccountId);
 
         #endregion
@@ -340,7 +352,7 @@ namespace de.ahzf.Gera
         /// Returns internal resources embedded within the assembly.
         /// </summary>
         [NoAuthentication]
-        [HTTPMapping(HTTPMethods.GET, "/{AccountId}/{Repository}/resources/{myResource}")]
+        [HTTPMapping(HTTPMethods.GET, "/resources/{myResource}")]
         HTTPResponse GetResources(String myResource);
 
 

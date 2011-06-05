@@ -30,19 +30,19 @@ using de.ahzf.Blueprints.PropertyGraph.InMemory;
 namespace de.ahzf.Gera
 {
 
-    public class Account : IEnumerable<KeyValuePair<String, Repository>>
+    public class Account : IEnumerable<KeyValuePair<VertexId, Repository>>
     {
 
-        public String Id { get; private set; }
-        private IDictionary<String, Repository> _Repositories;
+        public VertexId Id { get; private set; }
+        private IDictionary<VertexId, Repository> _Repositories;
 
-        public Account(String Id)
+        public Account(VertexId Id)
         {
             this.Id = Id;
-            this._Repositories = new Dictionary<String, Repository>();
+            this._Repositories = new Dictionary<VertexId, Repository>();
         }
 
-        public Repository CreateRepository(String RepositoryId)
+        public Repository CreateRepository(VertexId RepositoryId)
         {
             var _Repository = new Repository(RepositoryId);
             this._Repositories.Add(_Repository.Id, _Repository);
@@ -50,7 +50,7 @@ namespace de.ahzf.Gera
         }
 
 
-        public IEnumerator<KeyValuePair<String, Repository>> GetEnumerator()
+        public IEnumerator<KeyValuePair<VertexId, Repository>> GetEnumerator()
         {
             return _Repositories.GetEnumerator();
         }
