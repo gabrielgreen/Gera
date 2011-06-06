@@ -52,17 +52,8 @@ namespace de.ahzf.Gera
 
         #region Properties
 
-        #region IHTTPConnection
-
-        public IHTTPConnection IHTTPConnection { get; private set; }
-
-        #endregion
-
-        #region Accounts
-
-        public IDictionary<VertexId, Account> Accounts { get; internal set; }
-
-        #endregion
+        public IHTTPConnection                IHTTPConnection { get; private set; }
+        public IDictionary<VertexId, Account> Accounts        { get; set; }
 
         #endregion
 
@@ -375,23 +366,11 @@ namespace de.ahzf.Gera
                 Byte[]          _Content;
                 HTTPContentType _HTTPContentType;
 
-                var _Accept = _RequestHeader.GetBestMatchingAcceptHeader(HTTPContentType.JSON_UTF8, HTTPContentType.HTML_UTF8);
+                _Content         = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new {
+                                       AccountId = _NewAccountId.ToString()
+                                   }));
 
-                if (_Accept == HTTPContentType.JSON_UTF8)
-                {
-                    _Content         = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new {
-                                           AccountId = _NewAccountId.ToString()
-                                       }));
-                    _HTTPContentType = HTTPContentType.JSON_UTF8;
-                }
-                else
-                {
-                    _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
-                                      _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _NewAccountId.ToString() + "\">" + _NewAccountId.ToString() + "</a><br />").
-                                                                       AppendLine("<br /><a href=\"/\">back</a><br />")
-                                  ));
-                    _HTTPContentType = HTTPContentType.JSON_UTF8;
-                }
+                _HTTPContentType = HTTPContentType.JSON_UTF8;
 
                 return new HTTPResponse(
 

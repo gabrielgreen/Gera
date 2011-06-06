@@ -21,6 +21,8 @@ using System;
 
 using de.ahzf.Hermod.HTTP;
 using de.ahzf.Hermod.HTTP.Common;
+using System.Collections.Generic;
+using de.ahzf.Blueprints;
 
 #endregion
 
@@ -33,6 +35,9 @@ namespace de.ahzf.Gera
     //[HTTPService(Host: "localhost:8080", ForceAuthentication: true)]
     public interface IGeraService : IHTTPService
     {
+
+        IDictionary<VertexId, Account> Accounts { get; set; }
+
 
         // HTTP-Methods: LINK / UNLINK
 

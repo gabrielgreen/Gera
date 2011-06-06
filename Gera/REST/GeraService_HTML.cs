@@ -52,17 +52,8 @@ namespace de.ahzf.Gera
 
         #region Properties
 
-        #region IHTTPConnection
-
-        public IHTTPConnection IHTTPConnection { get; private set; }
-
-        #endregion
-
-        #region Accounts
-
-        public IDictionary<VertexId, Account> Accounts { get; internal set; }
-
-        #endregion
+        public IHTTPConnection                IHTTPConnection { get; private set; }
+        public IDictionary<VertexId, Account> Accounts        { get; set; }
 
         #endregion
 

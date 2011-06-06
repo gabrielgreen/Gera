@@ -34,7 +34,7 @@ namespace de.ahzf.Gera
     /// <summary>
     /// A tcp/http based rexster server.
     /// </summary>
-    public class GeraServer : HTTPServer<GeraService_HTML>
+    public class GeraServer : HTTPServer<IGeraService>
     {
 
         #region Data
@@ -85,8 +85,6 @@ namespace de.ahzf.Gera
 
             base.OnNewHTTPService += GeraService => { GeraService.Accounts = this._Accounts; };
             _Accounts = new Dictionary<VertexId, Account>();
-
-            var a = new AutoDiscovery<IGeraService>();
 
         }
 
