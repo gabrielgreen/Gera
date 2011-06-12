@@ -36,10 +36,12 @@ namespace de.ahzf.Gera
     public interface IGeraService : IHTTPService
     {
 
-        IDictionary<VertexId, Account> Accounts { get; set; }
+        GeraServer GeraServer { get; set; }
 
 
         // HTTP-Methods: LINK / UNLINK
+
+        #region GetLandingpage()
 
         /// <summary>
         /// The HTML landing page.
@@ -47,6 +49,9 @@ namespace de.ahzf.Gera
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/")]
         HTTPResponse GetLandingpage();
+
+        #endregion
+
 
         #region Account
 
@@ -57,6 +62,7 @@ namespace de.ahzf.Gera
         [HTTPMapping(HTTPMethods.GET, "/Accounts")]
         HTTPResponse ListValidAccounts();
 
+
         /// <summary>
         /// Create a new account using a random AccountId.
         /// </summary>
@@ -64,6 +70,7 @@ namespace de.ahzf.Gera
         [HTTPMapping(HTTPMethods.POST, "/Accounts")]
         HTTPResponse CreateNewRandomAccount();
         // include metadata map!
+
 
         /// <summary>
         /// Create a new account using the given AccountId.
@@ -74,6 +81,7 @@ namespace de.ahzf.Gera
         HTTPResponse CreateNewAccount(String AccountId);
         // include metadata map!
 
+
         /// <summary>
         /// Get information on the given account.
         /// </summary>
@@ -82,12 +90,14 @@ namespace de.ahzf.Gera
         [HTTPMapping(HTTPMethods.GET, "/Account/{AccountId}")]
         HTTPResponse GetAccountInformation(String AccountId);
 
+
         /// <summary>
-        /// Delete a Account
+        /// Delete an account using the given AccountId.
         /// </summary>
-        //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.DELETE, "/Account/{AccountId}")]
-        //HTTPResponse DeleteAccount(String AccountId);
+        /// <param name="AccountId">A valid AccountId.</param>
+        [NoAuthentication]
+        [HTTPMapping(HTTPMethods.DELETE, "/Account/{AccountId}")]
+        HTTPResponse DeleteAccount(String AccountId);
 
         #endregion
 
@@ -139,6 +149,7 @@ namespace de.ahzf.Gera
 
         #endregion
 
+
         #region Repositories
 
         /// <summary>
@@ -148,28 +159,48 @@ namespace de.ahzf.Gera
         [HTTPMapping(HTTPMethods.GET, "/{AccountId}/repositories")]
         HTTPResponse ListRepositories(String AccountId);
 
+
         /// <summary>
-        /// Create a repository
+        /// Repository list
         /// </summary>
         //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.PUT, "/{AccountId}/{RepositoryId}")]
-        //HTTPResponse CreateRepository(String AccountId, String RepositoryId);
-        // RepositoryId == "Accounts" is invalid!
+        //[HTTPMapping(HTTPMethods.GET, "/Repositories")]
+        //HTTPResponse ListRepositories();
+
+
+        /// <summary>
+        /// Create a new repository using a random RepositoryId.
+        /// </summary>
+        //[NoAuthentication]
+        //[HTTPMapping(HTTPMethods.POST, "/Repositories")]
+        //HTTPResponse CreateNewRandomRepository();
         // include metadata map!
+
+
+        /// <summary>
+        /// Create a new repository using the given RepositoryId.
+        /// </summary>
+        /// <param name="AccountId">A valid AccountId.</param>
+        //[NoAuthentication]
+        //[HTTPMapping(HTTPMethods.PUT, "/Repository/{RepositoryId}")]
+        //HTTPResponse CreateNewRepository(String RepositoryId);
+        // include metadata map!
+
 
         /// <summary>
         /// Repository Information
         /// </summary>
         //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.GET, "/{AccountId}/{RepositoryId}")]
-        //HTTPResponse GetRepositoryInformation(String AccountId, String RepositoryId);
+        //[HTTPMapping(HTTPMethods.GET, "/Repository/{RepositoryId}")]
+        //HTTPResponse GetRepositoryInformation(String RepositoryId);
+
 
         /// <summary>
         /// Delete a repository
         /// </summary>
         //[NoAuthentication]
-        //[HTTPMapping(HTTPMethods.DELETE, "/{AccountId}/{RepositoryId}")]
-        //HTTPResponse DeleteRepository(String AccountId, String RepositoryId);
+        //[HTTPMapping(HTTPMethods.DELETE, "/Repository/{RepositoryId}")]
+        //HTTPResponse DeleteRepository(String RepositoryId);
 
         #endregion
 
@@ -220,6 +251,7 @@ namespace de.ahzf.Gera
         //HTTPResponse DeleteRepositoryMetadatum(String AccountId, String RepositoryId, String Metakey);
 
         #endregion
+
 
         #region Transactions
 

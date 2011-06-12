@@ -40,9 +40,16 @@ namespace GeraTest
         {
 
             var _GeraServer    = new GeraServer();
-            var _Account1      = _GeraServer.CreateAccount(new VertexId("Account1"));
-            var _Repository1   = _Account1.CreateRepository(new VertexId("Repository1"));
-            var _SemanticGraph = _Repository1.CreateGraph(new VertexId("GeraGraph"));
+            var _Account1      = _GeraServer.CreateAccount(new AccountId("Account1"));
+            var _Repository1   = _GeraServer.CreateRepository(new RepositoryId("Repository1"));
+            var _SemanticGraph = _Repository1.CreateGraph(new GraphId("GeraGraph"));
+
+            // curl -H "Accept: text/html"        http://127.0.0.1:8182
+
+            
+
+            
+            
 
             // Vertex properties
             var _FirstName = FOAF.FirstName("FirstName");

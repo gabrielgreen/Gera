@@ -39,23 +39,10 @@ namespace de.ahzf.Gera
 {
 
     /// <summary>
-    /// The Gera service implementation.
+    /// A Gera HTML service implementation.
     /// </summary>
-    [HTTPImplementation(ContentType: "text/html")]
-    public class GeraService_HTML : IGeraService
+    public class GeraService_HTML : AGeraService, IGeraService
     {
-
-        
-        #region Data
-
-        #endregion
-
-        #region Properties
-
-        public IHTTPConnection                IHTTPConnection { get; private set; }
-        public IDictionary<VertexId, Account> Accounts        { get; set; }
-
-        #endregion
 
         #region Constructor(s)
 
@@ -65,7 +52,9 @@ namespace de.ahzf.Gera
         /// Creates a new GeraService.
         /// </summary>
         public GeraService_HTML()
-        { }
+        {
+            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.HTML_UTF8 };
+        }
 
         #endregion
 
@@ -78,12 +67,12 @@ namespace de.ahzf.Gera
         public GeraService_HTML(IHTTPConnection myIHTTPConnection)
         {
             IHTTPConnection = myIHTTPConnection;
+            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.HTML_UTF8 };
         }
 
         #endregion
 
         #endregion
-
 
 
         #region (private) HTMLBuilder(myHeadline, myFunc)
@@ -124,80 +113,6 @@ namespace de.ahzf.Gera
 
             return _StringBuilder.ToString();
 
-        }
-
-        #endregion
-
-        #region (private) TryGetGraph(myGraph, out myIGraph, out myHTTPErrorResponse)
-
-        ///// <summary>
-        ///// Returns a valid IGraph object or a HTTP error.
-        ///// </summary>
-        ///// <param name="myGraph">The name of the graph.</param>
-        ///// <param name="myIGraph">The IGraph object.</param>
-        ///// <param name="myHTTPErrorResponse">The HTTP error.</param>
-        ///// <returns>true|false</returns>
-        //private Boolean TryGetGraph(String myGraph, out IGraph myIGraph, out HTTPResponse myHTTPErrorResponse)
-        //{
-
-        //    myHTTPErrorResponse = null;
-
-        //    if (myGraph  == null ||
-        //        myGraph  == ""   ||
-        //        !Graphs.TryGetValue(myGraph, out myIGraph) ||
-        //        myIGraph == null)
-        //    {
-
-        //        myHTTPErrorResponse = new HTTPResponse(
-
-        //            new HTTPResponseHeader()
-        //            {
-        //                HttpStatusCode = HTTPStatusCode.NotFound,
-        //                CacheControl   = "no-cache",
-        //                ContentType    = HTTPContentType.TEXT_UTF8
-        //            },
-
-        //            "Invalid graph name!".ToUTF8Bytes()
-
-        //        );
-
-        //        myIGraph = null;
-
-        //        return false;
-
-        //    }
-
-        //    return true;
-
-        //}
-
-        #endregion
-
-        #region (private) IsValidAccountId(AccountId)
-
-        private Boolean IsValidAccountId(String AccountId)
-        {
-
-            if (AccountId == "Account")
-                return false;
-
-            if (AccountId == "Accounts")
-                return false;
-
-            if (AccountId == "resources")
-                return false;
-
-            return true;
-
-        }
-
-        #endregion
-
-        #region (private) IsValidAccountId(VertexId)
-
-        private Boolean IsValidAccountId(VertexId VertexId)
-        {
-            return IsValidAccountId(VertexId.ToString());
         }
 
         #endregion
@@ -256,6 +171,8 @@ namespace de.ahzf.Gera
 
         #endregion
 
+        #region Accounts
+
         #region ListAccountIds()
 
         /// <summary>
@@ -268,8 +185,8 @@ namespace de.ahzf.Gera
             var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("List Account Ids...",
                                      _StringBuilder => {
 
-                                         foreach (var _Account in Accounts)
-                                             _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Key + "\">" + _Account.Key + "</a><br />");
+                                         foreach (var _AccountId in GeraServer.AccountIds)
+                                             _StringBuilder.AppendLine("<a href=\"/Account/" + _AccountId + "\">" + _AccountId + "</a><br />");
 
                                          _StringBuilder.AppendLine("<br /><a href=\"/\">back</a><br />");
 
@@ -302,15 +219,12 @@ namespace de.ahzf.Gera
         public HTTPResponse CreateNewRandomAccount()
         {
 
-            var _NewAccountId = VertexId.NewVertexId;
-            var _Account = new Account(_NewAccountId);
-            this.Accounts.Add(_Account.Id, _Account);
-
+            var _Account       = GeraServer.CreateAccount();
             var _RequestHeader = IHTTPConnection.RequestHeader;
-            var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
-                               _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _NewAccountId.ToString() + "\">" + _NewAccountId.ToString() + "</a><br />").
-                                                                AppendLine("<br /><a href=\"/\">back</a><br />")
-                           ));
+            var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
+                                     _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Id.ToString() + "\">" + _Account.Id.ToString() + "</a><br />").
+                                                                      AppendLine("<br /><a href=\"/\">back</a><br />")
+                                 ));
 
             return new HTTPResponse(
 
@@ -354,14 +268,12 @@ namespace de.ahzf.Gera
 
             #endregion
 
-            var _NewAccountId = new VertexId(AccountId);
+            var _NewAccountId = new AccountId(AccountId);
 
-            if (!Accounts.ContainsKey(_NewAccountId))
+            if (!GeraServer.HasAccount(_NewAccountId))
             {
 
-                var _Account = new Account(_NewAccountId);
-                this.Accounts.Add(_Account.Id, _Account);
-
+                var _Account       = GeraServer.CreateAccount(AccountId: _NewAccountId);
                 var _RequestHeader = IHTTPConnection.RequestHeader;
                 Byte[]          _Content;
                 HTTPContentType _HTTPContentType;
@@ -371,14 +283,14 @@ namespace de.ahzf.Gera
                 if (_Accept == HTTPContentType.JSON_UTF8)
                 {
                     _Content         = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new {
-                                           AccountId = _NewAccountId.ToString()
+                                           AccountId = _Account.Id.ToString()
                                        }));
                     _HTTPContentType = HTTPContentType.JSON_UTF8;
                 }
                 else
                 {
                     _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
-                                      _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _NewAccountId.ToString() + "\">" + _NewAccountId.ToString() + "</a><br />").
+                                      _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Id.ToString() + "\">" + _Account.Id.ToString() + "</a><br />").
                                                                        AppendLine("<br /><a href=\"/\">back</a><br />")
                                   ));
                     _HTTPContentType = HTTPContentType.JSON_UTF8;
@@ -429,10 +341,10 @@ namespace de.ahzf.Gera
         public HTTPResponse GetAccountInformation(String AccountId)
         {
 
-            Account _Account;
-            var     _AccountId = new VertexId(AccountId);
+            IAccount _Account;
+            var      _AccountId = new AccountId(AccountId);
 
-            if (Accounts.TryGetValue(_AccountId, out _Account))
+            if (GeraServer.TryGetAccount(_AccountId, out _Account))
             {
 
                 var _RequestHeader = IHTTPConnection.RequestHeader;
@@ -446,7 +358,7 @@ namespace de.ahzf.Gera
                                        var _RepositoryCount = _Account.Count();
 
                                        if (_RepositoryCount > 0)
-                                           _StringBuilder.AppendLine("<tr><td rowspan=" + Accounts.Count + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
 
                                        if (_RepositoryCount > 1)
                                        {
@@ -495,21 +407,103 @@ namespace de.ahzf.Gera
 
         #endregion
 
+        #region DeleteAccount()
 
-        
+        /// <summary>
+        /// Delete an account using the given AccountId.
+        /// </summary>
+        /// <param name="AccountId">A valid AccountId.</param>
+        public HTTPResponse DeleteAccount(String AccountId)
+        {
+
+            #region Not a valid AccountId
+
+            if (!IsValidAccountId(AccountId))
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.BadRequest,
+                        CacheControl   = "no-cache",
+                    }
+                );
+            }
+
+            #endregion
+
+            var _AccountId = new AccountId(AccountId);
+
+            if (GeraServer.HasAccount(_AccountId))
+            {
+
+                if (GeraServer.DeleteAccount(_AccountId))
+                {
+
+                    var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account deleted!",
+                                          _StringBuilder => _StringBuilder.AppendLine("<br /><a href=\"/\">back</a><br />")
+                                      ));
+
+                    return new HTTPResponse(
+
+                        new HTTPResponseHeader()
+                        {
+                            HttpStatusCode = HTTPStatusCode.OK,
+                            CacheControl   = "no-cache",
+                            ContentLength  = (UInt64) _Content.Length,
+                            ContentType    = HTTPContentType.HTML_UTF8
+                        },
+
+                        _Content
+
+                    );
+
+
+                }
+
+                else return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.InternalServerError,
+                        CacheControl   = "no-cache"
+                    }
+                );
+
+            }
+
+
+            #region ...or not found!
+
+            else
+            {
+                return new HTTPResponse(
+                    new HTTPResponseHeader()
+                    {
+                        HttpStatusCode = HTTPStatusCode.NotFound,
+                        CacheControl   = "no-cache",
+                    }
+                );
+            }
+
+            #endregion
+
+        }
+
+        #endregion
+
+        #endregion
+
+
         #region ListRepositories()
 
         public HTTPResponse ListRepositories(String AccountId)
         {
 
-            Account _Account;
-            var     _AccountId = new VertexId(AccountId);
+            IAccount _Account;
+            var      _AccountId = new AccountId(AccountId);
 
-            if (Accounts.TryGetValue(_AccountId, out _Account))
+            if (GeraServer.TryGetAccount(_AccountId, out _Account))
             {
 
-                var _RequestHeader = IHTTPConnection.RequestHeader;
-                
                 var _Content = Encoding.UTF8.GetBytes(HTMLBuilder("List Repositories...",
                                    _StringBuilder => {
 
@@ -519,7 +513,7 @@ namespace de.ahzf.Gera
                                        var _RepositoryCount = _Account.Count();
 
                                        if (_RepositoryCount > 0)
-                                           _StringBuilder.AppendLine("<tr><td rowspan=" + Accounts.Count + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
 
                                        if (_RepositoryCount > 1)
                                        {
@@ -568,146 +562,7 @@ namespace de.ahzf.Gera
 
         #endregion
 
-        
 
-
-        #region GetResources(myResource)
-
-        /// <summary>
-        /// Returns internal resources embedded within the assembly.
-        /// </summary>
-        /// <param name="myResource">The path and name of the resource.</param>
-        public HTTPResponse GetResources(String myResource)
-        {
-
-            #region Data
-
-            var _Assembly     = Assembly.GetExecutingAssembly();
-            var _AllResources = _Assembly.GetManifestResourceNames();
-
-            myResource = myResource.Replace('/', '.');
-
-            #endregion
-
-            #region Return internal assembly resources...
-
-            if (_AllResources.Contains("Gera.resources." + myResource))
-            {
-
-                var _ResourceContent = _Assembly.GetManifestResourceStream("Gera.resources." + myResource);
-
-                HTTPContentType _ResponseContentType = null;
-
-                // Get the apropriate content type based on the suffix of the requested resource
-                switch (myResource.Remove(0, myResource.LastIndexOf(".") + 1))
-                {
-                    case "htm":  _ResponseContentType = HTTPContentType.XHTML_UTF8;      break;
-                    case "html": _ResponseContentType = HTTPContentType.XHTML_UTF8;      break;
-                    case "css":  _ResponseContentType = HTTPContentType.CSS_UTF8;        break;
-                    case "gif":  _ResponseContentType = HTTPContentType.GIF;             break;
-                    case "ico":  _ResponseContentType = HTTPContentType.ICO;             break;
-                    case "swf":  _ResponseContentType = HTTPContentType.SWF;             break;
-                    case "js":   _ResponseContentType = HTTPContentType.JAVASCRIPT_UTF8; break;
-                    default:     _ResponseContentType = HTTPContentType.OCTETSTREAM;     break;
-                }
-
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                        {
-                            HttpStatusCode = HTTPStatusCode.OK,
-                            ContentType    = _ResponseContentType,
-                            ContentLength  = (UInt64) _ResourceContent.Length,
-                            CacheControl   = "no-cache",
-                            Connection     = "close",
-                        },
-
-                    _ResourceContent
-
-                );
-
-            }
-
-            #endregion
-
-            #region ...or send an (custom) error 404!
-
-            else
-            {
-                
-                Stream _ResourceContent = null;
-
-                if (_AllResources.Contains("Gera.resources.errorpages.Error404.html"))
-                    _ResourceContent = _Assembly.GetManifestResourceStream("Gera.resources.errorpages.Error404.html");
-                else
-                    _ResourceContent = new MemoryStream(UTF8Encoding.UTF8.GetBytes("Error 404 - File not found!"));
-
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                        {
-                            HttpStatusCode = HTTPStatusCode.NotFound,
-                            ContentType    = HTTPContentType.XHTML_UTF8,
-                            ContentLength  = (UInt64) _ResourceContent.Length,
-                            CacheControl   = "no-cache",
-                            Connection     = "close",
-                        },
-
-                    _ResourceContent
-
-                );
-
-            }
-
-            #endregion
-
-        }
-
-        #endregion
-
-        #region GetFavicon()
-
-        /// <summary>
-        /// Returns the favicon.ico.
-        /// </summary>
-        public HTTPResponse GetFavicon()
-        {
-            return GetResources("favicon.ico");
-        }
-
-        #endregion
-
-        #region GetError(myHTTPStatusCode)
-
-        /// <summary>
-        /// Get a http error for debugging purposes.
-        /// An additional error reason may be given via the
-        /// QueryString (e.g. "/error/204&reason=unknown")
-        /// </summary>
-        /// <param name="myHTTPStatusCode">The http status code.</param>
-        public HTTPResponse GetError(String myHTTPStatusCode)
-        {
-
-            IHTTPConnection.ResponseHeader.HttpStatusCode = HTTPStatusCode.ParseString(myHTTPStatusCode);
-
-            if (IHTTPConnection.RequestHeader.QueryString.ContainsKey("reason"))
-                IHTTPConnection.ErrorReason = IHTTPConnection.RequestHeader.QueryString["reason"];
-
-            return new HTTPResponse(
-
-                new HTTPResponseHeader()
-                {
-                    HttpStatusCode = IHTTPConnection.ResponseHeader.HttpStatusCode,
-                    Connection     = "close"
-                }
-
-            );
-
-        }
-
-        #endregion
-
-        
     }
 
 }
