@@ -37,6 +37,7 @@ namespace de.ahzf.Gera
         #region Data
 
         private IDictionary<RepositoryId, IRepository> _Repositories;
+        private IDictionary<String, Object>            _Metadata;
 
         #endregion
 
@@ -51,22 +52,65 @@ namespace de.ahzf.Gera
 
         #region Constructor(s)
 
-        #region Account(AccountId)
+        #region Account(AccountId, Metadata = null)
 
         /// <summary>
         /// Create a new Gera Account.
         /// </summary>
         /// <param name="AccountId">The AccountId.</param>
-        public Account(AccountId AccountId)
+        /// <param name="Metadata">Optional metadata.</param>
+        public Account(AccountId AccountId, IDictionary<String, Object> Metadata = null)
         {
+
             Id            = AccountId;
             _Repositories = new Dictionary<RepositoryId, IRepository>();
+            _Metadata     = new Dictionary<String, Object>(StringComparer.OrdinalIgnoreCase);;
+            
+            if (Metadata != null)
+                AddMetadata(Metadata);
+
         }
 
         #endregion
 
         #endregion
 
+
+        #region Metadata
+
+        #region AddMetadata(Metadata)
+
+        /// <summary>
+        /// Add metadata.
+        /// </summary>
+        /// <param name="Metadata">Some metadata.</param>
+        public void AddMetadata(IDictionary<String, Object> Metadata)
+        {
+            foreach (var _KeyValuePair in Metadata)
+                _Metadata.Add(_KeyValuePair.Key, _KeyValuePair.Value);
+        }
+
+        #endregion
+
+        #region Metadata
+
+        /// <summary>
+        /// Return all account metadata.
+        /// </summary>
+        public IEnumerable<KeyValuePair<String, Object>> Metadata
+        {
+            get
+            {
+                return _Metadata;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region Repositories
 
         #region CreateRepository(RepositoryId = null, Repository = null)
 
@@ -177,25 +221,6 @@ namespace de.ahzf.Gera
         }
 
         #endregion
-
-
-        #region IEnumerator<KeyValuePair<RepositoryId, IRepository>> Members
-
-        /// <summary>
-        /// Get an Enumerator.
-        /// </summary>
-        public IEnumerator<KeyValuePair<RepositoryId, IRepository>> GetEnumerator()
-        {
-            return _Repositories.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Get an Enumerator.
-        /// </summary>
-        IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return _Repositories.GetEnumerator();
-        }
 
         #endregion
 

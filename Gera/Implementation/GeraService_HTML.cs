@@ -354,18 +354,16 @@ namespace de.ahzf.Gera
 
                                        _StringBuilder.AppendLine("<table>").
                                                       AppendLine("<tr><td>AccountId:</td><td>" + AccountId.ToString() + "</td></tr>");
-                        
-                                       var _RepositoryCount = _Account.Count();
+
+                                       var _RepositoryArray = _Account.RepositoryIds.ToArray();
+                                       var _RepositoryCount = _RepositoryArray.Length;
 
                                        if (_RepositoryCount > 0)
-                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _RepositoryArray[0] + "\">" + _RepositoryArray[0] + "</a></td></tr>");
 
                                        if (_RepositoryCount > 1)
-                                       {
-                                           var _Array = _Account.ToArray();
                                            for(var _Repo = 1; _Repo<_RepositoryCount; _Repo++)
-                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _Array[_Repo].Value.Id + "\">" + _Array[_Repo].Value.Id + "</a></td></tr>");
-                                       }
+                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _RepositoryArray[_Repo] + "\">" + _RepositoryArray[_Repo] + "</a></td></tr>");
 
                                    }
                                ));
@@ -509,18 +507,16 @@ namespace de.ahzf.Gera
 
                                        _StringBuilder.AppendLine("<table>").
                                                       AppendLine("<tr><td>AccountId:</td><td>" + AccountId.ToString() + "</td></tr>");
-                        
-                                       var _RepositoryCount = _Account.Count();
+
+                                       var _RepositoryArray = _Account.RepositoryIds.ToArray();
+                                       var _RepositoryCount = _RepositoryArray.Length;
 
                                        if (_RepositoryCount > 0)
-                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _Account.First().Value.Id + "\">" + _Account.First().Value.Id + "</a></td></tr>");
+                                           _StringBuilder.AppendLine("<tr><td rowspan=" + GeraServer.NumberOfAccounts + ">Repositories</td><td><a href=\"/Account/" + AccountId.ToString() + "/" + _RepositoryArray[0] + "\">" + _RepositoryArray[0] + "</a></td></tr>");
 
                                        if (_RepositoryCount > 1)
-                                       {
-                                           var _Array = _Account.ToArray();
                                            for(var _Repo = 1; _Repo<_RepositoryCount; _Repo++)
-                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _Array[_Repo].Value.Id + "\">" + _Array[_Repo].Value.Id + "</a></td></tr>");
-                                       }
+                                               _StringBuilder.AppendLine("<tr><td><a href=\"/Account/" + AccountId + "/" + _RepositoryArray[_Repo] + "\">" + _RepositoryArray[_Repo] + "</a></td></tr>");
 
                                    }
                                ));

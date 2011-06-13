@@ -83,6 +83,54 @@ namespace de.ahzf.Gera
         #endregion
 
 
+        private IDictionary<String, Object> ParseMetadata()
+        {
+
+            var _Metadata = new Dictionary<String, Object>(StringComparer.OrdinalIgnoreCase);
+
+            if (IHTTPConnection.RequestBody == null)
+                return _Metadata;
+
+            var _RequestBody = Encoding.UTF8.GetString(IHTTPConnection.RequestBody);
+            if (_RequestBody == null)
+                return _Metadata;
+
+            var _JSONRequest = JObject.Parse(_RequestBody);
+            if (_JSONRequest == null)
+                return _Metadata;
+
+            var _JSONMetadata = _JSONRequest["metadata"] as JObject;
+            if (_JSONMetadata == null)
+                return _Metadata;
+
+            foreach (var _KeyValuePair in _JSONMetadata)
+            {
+                
+                var _Value = _KeyValuePair.Value.ToString().Trim();
+
+                if (!_Value.StartsWith("{") && !_Value.StartsWith("["))
+                {
+
+                    // Add as string...
+                    if (_Value.StartsWith("\"") && _Value.EndsWith("\""))
+                        _Metadata.Add(_KeyValuePair.Key.ToString(), _Value.Substring(1, _Value.Length - 2));
+
+                    // ...or try to parse as Int64!
+                    else
+                    {
+                        Int64 _Int64;
+                        if (Int64.TryParse(_Value, out _Int64))
+                            _Metadata.Add(_KeyValuePair.Key.ToString(), _Int64);
+                    }
+
+                }
+
+            }
+
+            return _Metadata;
+
+        }
+
 
         #region GetLandingpage()
 
@@ -100,7 +148,9 @@ namespace de.ahzf.Gera
         public HTTPResponse GetLandingpage()
         {
 
-            var _Content = Encoding.UTF8.GetBytes(new JObject(new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))).ToString());
+            var _Content = Encoding.UTF8.GetBytes(new JObject(
+                               new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))
+                           ).ToString());
 
             return new HTTPResponse(
 
@@ -138,7 +188,9 @@ namespace de.ahzf.Gera
         public HTTPResponse ListValidAccounts()
         {
 
-            var _Content = Encoding.UTF8.GetBytes(new JObject(new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))).ToString());
+            var _Content = Encoding.UTF8.GetBytes(new JObject(
+                               new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))
+                           ).ToString());
 
             return new HTTPResponse(
 
@@ -168,11 +220,40 @@ namespace de.ahzf.Gera
         /// {
         ///   "AccountId": "9b659ee8-1521-4d55-a24a-9c03814bdb4e"
         /// }
+        /// $ curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d "{"metadata" :{\"name\":\"Alice\", \"age\":18, \"password\":\"secure\"}" http://127.0.0.1:8182/Accounts
+        /// {
+        ///   "AccountId": "cf0f5a72-ef01-4eb7-ae76-50f7540cf890",
+        ///   "Metadata": {
+        ///     "name": "Alice",
+        ///     "age": 18,
+        ///     "password": "secure"
+        ///   }
+        /// }
         /// </example>
         public HTTPResponse CreateNewRandomAccount()
         {
+            
+            Byte[] _Content = null;
 
-            var _Content = Encoding.UTF8.GetBytes(new JObject(new JProperty("AccountId", GeraServer.CreateAccount().Id.ToString())).ToString());
+            // ADD HTTP-HEADERFIELD CONTENT-LENGTH!
+            // ADD HTTP-HEADERFIELD CONTENT-TYPE!
+            if (IHTTPConnection.RequestBody.Length > 0)
+            {
+
+                var _Account  = GeraServer.CreateAccount(Metadata: ParseMetadata());
+
+                _Content = Encoding.UTF8.GetBytes(new JObject(
+                               new JProperty("AccountId", _Account.Id.ToString()),
+                               new JProperty("Metadata",  new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
+                           ).ToString());
+
+            }
+
+            else
+                _Content = Encoding.UTF8.GetBytes(new JObject(
+                               new JProperty("AccountId", GeraServer.CreateAccount().Id.ToString())
+                           ).ToString());
+
 
             return new HTTPResponse(
 
@@ -227,7 +308,9 @@ namespace de.ahzf.Gera
             if (!GeraServer.HasAccount(_NewAccountId))
             {
 
-                var _Content = Encoding.UTF8.GetBytes(new JObject(new JProperty("AccountId", GeraServer.CreateAccount(AccountId: _NewAccountId).Id.ToString())).ToString());
+                var _Content = Encoding.UTF8.GetBytes(new JObject(
+                                   new JProperty("AccountId", GeraServer.CreateAccount(AccountId: _NewAccountId).Id.ToString())
+                               ).ToString());
 
                 return new HTTPResponse(
 
@@ -287,13 +370,13 @@ namespace de.ahzf.Gera
             if (GeraServer.TryGetAccount(_AccountId, out _Account))
             {
 
-                var _Content = Encoding.UTF8.GetBytes(
-                                   new JObject(new JProperty("AccountId", AccountId),
-                                               new JProperty("Repositories", new JArray(
-                                                   from   _RepositoryId
-                                                   in     _Account.RepositoryIds
-                                                   select _RepositoryId.ToString()))).
-                                   ToString());
+                var _Content = Encoding.UTF8.GetBytes(new JObject(
+                                   new JProperty("AccountId", AccountId),
+                                   new JProperty("Repositories", new JArray(
+                                       from   _RepositoryId
+                                       in     _Account.RepositoryIds
+                                       select _RepositoryId.ToString()))
+                               ).ToString());
 
                 return new HTTPResponse(
 

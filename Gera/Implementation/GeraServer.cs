@@ -153,21 +153,22 @@ namespace de.ahzf.Gera
 
         #region Accounts
 
-        #region CreateAccount(AccountId = null, Account = null)
+        #region CreateAccount(AccountId = null, Account = null, Metadata = null)
 
         /// <summary>
         /// Create a new Account using the given AccountId.
         /// </summary>
         /// <param name="AccountId">An optional AccountId.</param>
-        /// <param name="Account">A optional Account.</param>
-        public IAccount CreateAccount(AccountId AccountId = null, IAccount Account = null)
+        /// <param name="Account">An optional Account.</param>
+        /// <param name="Metadata">Optional metadata.</param>
+        public IAccount CreateAccount(AccountId AccountId = null, IAccount Account = null, IDictionary<String, Object> Metadata = null)
         {
 
             if (AccountId == null)
                 AccountId = AccountId.NewAccountId;
 
             if (Account   == null)
-                Account   = new Account(AccountId);
+                Account   = new Account(AccountId, Metadata);
 
             _Accounts.Add(AccountId, Account);
 

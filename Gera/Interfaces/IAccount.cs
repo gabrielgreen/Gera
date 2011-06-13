@@ -28,7 +28,7 @@ namespace de.ahzf.Gera
     /// <summary>
     /// A Gera Account.
     /// </summary>
-    public interface IAccount : IEnumerable<KeyValuePair<RepositoryId, IRepository>>
+    public interface IAccount
     {
 
         /// <summary>
@@ -36,7 +36,24 @@ namespace de.ahzf.Gera
         /// </summary>
         AccountId Id { get; }
 
+
+        #region Metadata
+
+        /// <summary>
+        /// Add metadata.
+        /// </summary>
+        /// <param name="Metadata">Some metadata.</param>
+        void AddMetadata(IDictionary<String, Object> Metadata);
         
+        /// <summary>
+        /// Return all account metadata.
+        /// </summary>
+        IEnumerable<KeyValuePair<String, Object>> Metadata { get; }
+
+        #endregion
+
+        #region Repositories
+
         /// <summary>
         /// Create a new repository using the given RepositoryId.
         /// </summary>
@@ -77,6 +94,8 @@ namespace de.ahzf.Gera
         /// An enumeration of all RepositoryIds.
         /// </summary>
         IEnumerable<RepositoryId> RepositoryIds { get; }
+
+        #endregion
 
     }
 

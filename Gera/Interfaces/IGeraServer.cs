@@ -52,7 +52,8 @@ namespace de.ahzf.Gera
         /// </summary>
         /// <param name="AccountId">An optional AccountId.</param>
         /// <param name="Account">A optional Account.</param>
-        IAccount CreateAccount(AccountId AccountId = null, IAccount Account = null);
+        /// <param name="Metadata">Optional metadata.</param>
+        IAccount CreateAccount(AccountId AccountId = null, IAccount Account = null, IDictionary<String, Object> Metadata = null);
 
 
         /// <summary>
