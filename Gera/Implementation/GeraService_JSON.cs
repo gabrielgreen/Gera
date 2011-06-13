@@ -47,6 +47,9 @@ namespace de.ahzf.Gera
         #region Data
 
         private readonly Byte[] JSON_Success;
+        
+        private const String __AccountId = "AccountId";
+        private const String __Metadata  = "Metadata";
 
         #endregion
 
@@ -83,10 +86,18 @@ namespace de.ahzf.Gera
         #endregion
 
 
+        #region (private) ParseMetadata()
+
+        /// <summary>
+        /// Parse the JSON metadata from the http request body.
+        /// </summary>
+        /// <returns>A metadata dictionary.</returns>
         private IDictionary<String, Object> ParseMetadata()
         {
 
             var _Metadata = new Dictionary<String, Object>(StringComparer.OrdinalIgnoreCase);
+
+            #region Decode RequestBody
 
             if (IHTTPConnection.RequestBody == null)
                 return _Metadata;
@@ -95,13 +106,34 @@ namespace de.ahzf.Gera
             if (_RequestBody == null)
                 return _Metadata;
 
-            var _JSONRequest = JObject.Parse(_RequestBody);
+            #endregion
+
+            #region Parse JSON
+
+            JObject _JSONRequest = null;
+
+            try
+            {
+                _JSONRequest = JObject.Parse(_RequestBody);
+            }
+            catch (Exception)
+            { }
+
             if (_JSONRequest == null)
                 return _Metadata;
 
-            var _JSONMetadata = _JSONRequest["metadata"] as JObject;
+            #endregion
+
+            #region Get JSON metadata
+
+            var _JSONMetadata = _JSONRequest[__Metadata] as JObject;
+            if (_JSONMetadata == null) _JSONMetadata = _JSONRequest[__Metadata.ToLower()] as JObject;
             if (_JSONMetadata == null)
                 return _Metadata;
+
+            #endregion
+
+            #region Add valid KeyValuePairs
 
             foreach (var _KeyValuePair in _JSONMetadata)
             {
@@ -127,9 +159,13 @@ namespace de.ahzf.Gera
 
             }
 
+            #endregion
+
             return _Metadata;
 
         }
+
+        #endregion
 
 
         #region GetLandingpage()
@@ -243,15 +279,15 @@ namespace de.ahzf.Gera
                 var _Account  = GeraServer.CreateAccount(Metadata: ParseMetadata());
 
                 _Content = Encoding.UTF8.GetBytes(new JObject(
-                               new JProperty("AccountId", _Account.Id.ToString()),
-                               new JProperty("Metadata",  new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
+                               new JProperty(__AccountId, _Account.Id.ToString()),
+                               new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
                            ).ToString());
 
             }
 
             else
                 _Content = Encoding.UTF8.GetBytes(new JObject(
-                               new JProperty("AccountId", GeraServer.CreateAccount().Id.ToString())
+                               new JProperty(__AccountId, GeraServer.CreateAccount().Id.ToString())
                            ).ToString());
 
 
@@ -278,11 +314,20 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Create a new account using the given AccountId.
         /// </summary>
-        /// <param name="AccountId">A valid AccountId.</param>
+        /// <param name=__AccountId>A valid AccountId.</param>
         /// <example>
         /// $ curl -X PUT -H "Accept: application/json" http://127.0.0.1:8182/Account/ABC
         /// {
         ///   "AccountId": "ABC"
+        /// }
+        /// $ curl -X PUT -H "Content-Type: application/json" -H "Accept: application/json" -d "{"metadata" :{\"name\":\"Alice\", \"age\":18, \"password\":\"secure\"}" http://127.0.0.1:8182/Account/ABC
+        /// {
+        ///   "AccountId": "ABC",
+        ///   "Metadata": {
+        ///     "name": "Alice",
+        ///     "age": 18,
+        ///     "password": "secure"
+        ///   }
         /// }
         /// </example>
         public HTTPResponse CreateNewAccount(String AccountId)
@@ -308,8 +353,25 @@ namespace de.ahzf.Gera
             if (!GeraServer.HasAccount(_NewAccountId))
             {
 
-                var _Content = Encoding.UTF8.GetBytes(new JObject(
-                                   new JProperty("AccountId", GeraServer.CreateAccount(AccountId: _NewAccountId).Id.ToString())
+                Byte[] _Content = null;
+
+                // ADD HTTP-HEADERFIELD CONTENT-LENGTH!
+                // ADD HTTP-HEADERFIELD CONTENT-TYPE!
+                if (IHTTPConnection.RequestBody.Length > 0)
+                {
+
+                    var _Account  = GeraServer.CreateAccount(AccountId: _NewAccountId, Metadata: ParseMetadata());
+
+                    _Content = Encoding.UTF8.GetBytes(new JObject(
+                                   new JProperty(__AccountId, _Account.Id.ToString()),
+                                   new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
+                               ).ToString());
+
+                }
+
+                else
+                    _Content = Encoding.UTF8.GetBytes(new JObject(
+                                   new JProperty(__AccountId, GeraServer.CreateAccount(AccountId: _NewAccountId).Id.ToString())
                                ).ToString());
 
                 return new HTTPResponse(
@@ -353,7 +415,7 @@ namespace de.ahzf.Gera
         /// <summary>
         ///  Get information on the given account.
         /// </summary>
-        /// <param name="AccountId">A valid AccountId.</param>
+        /// <param name=__AccountId>A valid AccountId.</param>
         /// <example>
         /// $ curl -X GET -H "Accept: application/json" http://127.0.0.1:8182/Account/ABC
         /// {
@@ -371,7 +433,7 @@ namespace de.ahzf.Gera
             {
 
                 var _Content = Encoding.UTF8.GetBytes(new JObject(
-                                   new JProperty("AccountId", AccountId),
+                                   new JProperty(__AccountId, AccountId),
                                    new JProperty("Repositories", new JArray(
                                        from   _RepositoryId
                                        in     _Account.RepositoryIds
@@ -420,7 +482,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Delete an account using the given AccountId.
         /// </summary>
-        /// <param name="AccountId">A valid AccountId.</param>
+        /// <param name=__AccountId>A valid AccountId.</param>
         /// <example>
         /// $ curl -X DELETE -H "Accept: application/json" http://127.0.0.1:8182/Account/ABC
         /// {
