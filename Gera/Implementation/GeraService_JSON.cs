@@ -253,10 +253,15 @@ namespace de.ahzf.Gera
         /// </summary>
         /// <example>
         /// $ curl -X POST -H "Accept: application/json" http://127.0.0.1:8182/Accounts
+        /// ~ HTTP/1.1 201 Created
+        /// ~ Location: http://127.0.0.1:8182/Account/5b0afa1a-99ac-4727-bfe6-ef77803e1d81
         /// {
-        ///   "AccountId": "9b659ee8-1521-4d55-a24a-9c03814bdb4e"
+        ///   "AccountId": "5b0afa1a-99ac-4727-bfe6-ef77803e1d81"
         /// }
+        /// 
         /// $ curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d "{"metadata" :{\"name\":\"Alice\", \"age\":18, \"password\":\"secure\"}" http://127.0.0.1:8182/Accounts
+        /// ~ HTTP/1.1 201 Created
+        /// ~ Location: http://127.0.0.1:8182/Account/cf0f5a72-ef01-4eb7-ae76-50f7540cf890
         /// {
         ///   "AccountId": "cf0f5a72-ef01-4eb7-ae76-50f7540cf890",
         ///   "Metadata": {
@@ -268,34 +273,35 @@ namespace de.ahzf.Gera
         /// </example>
         public HTTPResponse CreateNewRandomAccount()
         {
-            
-            Byte[] _Content = null;
+
+            IAccount _Account = null;
+            Byte[]   _Content = null;
 
             // ADD HTTP-HEADERFIELD CONTENT-LENGTH!
             // ADD HTTP-HEADERFIELD CONTENT-TYPE!
             if (IHTTPConnection.RequestBody.Length > 0)
             {
-
-                var _Account  = GeraServer.CreateAccount(Metadata: ParseMetadata());
-
+                _Account = GeraServer.CreateAccount(Metadata: ParseMetadata());
                 _Content = Encoding.UTF8.GetBytes(new JObject(
                                new JProperty(__AccountId, _Account.Id.ToString()),
                                new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
                            ).ToString());
-
             }
-
             else
+            {
+                _Account = GeraServer.CreateAccount();
                 _Content = Encoding.UTF8.GetBytes(new JObject(
-                               new JProperty(__AccountId, GeraServer.CreateAccount().Id.ToString())
+                               new JProperty(__AccountId, _Account.Id.ToString())
                            ).ToString());
+            }
 
 
             return new HTTPResponse(
 
                 new HTTPResponseHeader()
                 {
-                    HttpStatusCode = HTTPStatusCode.OK,
+                    HttpStatusCode = HTTPStatusCode.Created,
+                    Location       = "http://" + IHTTPConnection.RequestHeader.Host + "/Account/" + _Account.Id.ToString(),
                     CacheControl   = "no-cache",
                     ContentLength  = (UInt64) _Content.Length,
                     ContentType    = HTTPContentType.JSON_UTF8
@@ -317,10 +323,15 @@ namespace de.ahzf.Gera
         /// <param name=__AccountId>A valid AccountId.</param>
         /// <example>
         /// $ curl -X PUT -H "Accept: application/json" http://127.0.0.1:8182/Account/ABC
+        /// ~ HTTP/1.1 201 Created
+        /// ~ Location: http://127.0.0.1:8182/Account/ABC
         /// {
         ///   "AccountId": "ABC"
         /// }
+        /// 
         /// $ curl -X PUT -H "Content-Type: application/json" -H "Accept: application/json" -d "{"metadata" :{\"name\":\"Alice\", \"age\":18, \"password\":\"secure\"}" http://127.0.0.1:8182/Account/ABC
+        /// ~ HTTP/1.1 201 Created
+        /// ~ Location: http://127.0.0.1:8182/Account/ABC
         /// {
         ///   "AccountId": "ABC",
         ///   "Metadata": {
@@ -353,32 +364,33 @@ namespace de.ahzf.Gera
             if (!GeraServer.HasAccount(_NewAccountId))
             {
 
-                Byte[] _Content = null;
+                IAccount _Account = null;
+                Byte[]   _Content = null;
 
                 // ADD HTTP-HEADERFIELD CONTENT-LENGTH!
                 // ADD HTTP-HEADERFIELD CONTENT-TYPE!
                 if (IHTTPConnection.RequestBody.Length > 0)
                 {
-
-                    var _Account  = GeraServer.CreateAccount(AccountId: _NewAccountId, Metadata: ParseMetadata());
-
+                    _Account = GeraServer.CreateAccount(AccountId: _NewAccountId, Metadata: ParseMetadata());
                     _Content = Encoding.UTF8.GetBytes(new JObject(
                                    new JProperty(__AccountId, _Account.Id.ToString()),
                                    new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
                                ).ToString());
-
                 }
-
                 else
+                {
+                    _Account = GeraServer.CreateAccount(AccountId: _NewAccountId);
                     _Content = Encoding.UTF8.GetBytes(new JObject(
-                                   new JProperty(__AccountId, GeraServer.CreateAccount(AccountId: _NewAccountId).Id.ToString())
+                                   new JProperty(__AccountId, _Account.Id.ToString())
                                ).ToString());
+                }
 
                 return new HTTPResponse(
 
                     new HTTPResponseHeader()
                     {
-                        HttpStatusCode = HTTPStatusCode.OK,
+                        HttpStatusCode = HTTPStatusCode.Created,
+                        Location       = "http://" + IHTTPConnection.RequestHeader.Host + "/Account/" + _Account.Id.ToString(),
                         CacheControl   = "no-cache",
                         ContentLength  = (UInt64) _Content.Length,
                         ContentType    = HTTPContentType.JSON_UTF8
@@ -485,9 +497,6 @@ namespace de.ahzf.Gera
         /// <param name=__AccountId>A valid AccountId.</param>
         /// <example>
         /// $ curl -X DELETE -H "Accept: application/json" http://127.0.0.1:8182/Account/ABC
-        /// {
-        ///   "result": "success"
-        /// }
         /// </example>
         public HTTPResponse DeleteAccount(String AccountId)
         {
@@ -514,22 +523,13 @@ namespace de.ahzf.Gera
 
                 if (GeraServer.DeleteAccount(_AccountId))
                 {
-
                     return new HTTPResponse(
-
                         new HTTPResponseHeader()
                         {
                             HttpStatusCode = HTTPStatusCode.OK,
                             CacheControl   = "no-cache",
-                            ContentLength  = (UInt64) JSON_Success.Length,
-                            ContentType    = HTTPContentType.JSON_UTF8
-                        },
-
-                        JSON_Success
-
+                        }
                     );
-
-
                 }
 
                 else return new HTTPResponse(
