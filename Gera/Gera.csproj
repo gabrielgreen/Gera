@@ -75,10 +75,6 @@
       <Project>{D4D2ACAD-FF2E-44AD-9D4A-6E332C246FAD}</Project>
       <Name>InMemoryGraph</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BlueQuad.NET\BlueQuad\BlueQuad.csproj">
-      <Project>{073E08F9-CA23-4E08-B18F-644DC0DC91D7}</Project>
-      <Name>BlueQuad</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj">
       <Project>{EAB20045-3D15-4220-BB56-B22FF6630AC9}</Project>
       <Name>Hermod</Name>

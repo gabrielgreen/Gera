@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeraTest", "GeraTest\GeraTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blueprints", "..\Blueprints.NET\blueprints\Blueprints.csproj", "{B9DE4181-416E-4DE4-A983-B90FC9412774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueQuad", "..\BlueQuad.NET\BlueQuad\BlueQuad.csproj", "{073E08F9-CA23-4E08-B18F-644DC0DC91D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipes", "..\Pipes.NET\Pipes\Pipes.csproj", "{3949790D-8591-4101-9E4D-CE7A758E7409}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermod", "..\Hermod\Hermod\Hermod.csproj", "{EAB20045-3D15-4220-BB56-B22FF6630AC9}"
@@ -79,16 +77,6 @@ Global
 		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B9DE4181-416E-4DE4-A983-B90FC9412774}.Release|x86.ActiveCfg = Release|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{073E08F9-CA23-4E08-B18F-644DC0DC91D7}.Release|x86.ActiveCfg = Release|Any CPU
 		{3949790D-8591-4101-9E4D-CE7A758E7409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3949790D-8591-4101-9E4D-CE7A758E7409}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3949790D-8591-4101-9E4D-CE7A758E7409}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
