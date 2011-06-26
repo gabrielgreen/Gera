@@ -330,7 +330,7 @@ namespace de.ahzf.Gera
             if (myRepositoryId == null)
                 throw new ArgumentNullException("myRepositoryId must not be null!");
 
-            return _ElementId.CompareTo(myRepositoryId._ElementId);
+            return _Id.CompareTo(myRepositoryId._Id);
 
         }
 
@@ -379,7 +379,7 @@ namespace de.ahzf.Gera
             if (myRepositoryId == null)
                 throw new ArgumentNullException("Parameter myRepositoryId must not be null!");
 
-            return _ElementId.Equals(myRepositoryId._ElementId);
+            return _Id.Equals(myRepositoryId._Id);
 
         }
 

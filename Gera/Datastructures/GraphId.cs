@@ -329,7 +329,7 @@ namespace de.ahzf.Gera
             if (myGraphId == null)
                 throw new ArgumentNullException("myGraphId must not be null!");
 
-            return _ElementId.CompareTo(myGraphId._ElementId);
+            return _Id.CompareTo(myGraphId._Id);
 
         }
 
@@ -378,7 +378,7 @@ namespace de.ahzf.Gera
             if (myGraphId == null)
                 throw new ArgumentNullException("Parameter myGraphId must not be null!");
 
-            return _ElementId.Equals(myGraphId._ElementId);
+            return _Id.Equals(myGraphId._Id);
 
         }
 

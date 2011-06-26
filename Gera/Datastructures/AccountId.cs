@@ -329,7 +329,7 @@ namespace de.ahzf.Gera
             if (myAccountId == null)
                 throw new ArgumentNullException("myAccountId must not be null!");
 
-            return _ElementId.CompareTo(myAccountId._ElementId);
+            return _Id.CompareTo(myAccountId._Id);
 
         }
 
@@ -378,7 +378,7 @@ namespace de.ahzf.Gera
             if (myAccountId == null)
                 throw new ArgumentNullException("Parameter myAccountId must not be null!");
 
-            return _ElementId.Equals(myAccountId._ElementId);
+            return _Id.Equals(myAccountId._Id);
 
         }
 
