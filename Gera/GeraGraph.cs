@@ -56,9 +56,9 @@ namespace de.ahzf.Gera
         /// <param name="GraphId">The identification of this graph.</param>
         /// <param name="GraphInitializer">A delegate to initialize the newly created graph.</param>
         public GeraGraph(VertexId GraphId,
-                         Action<IPropertyGraph<VertexId,    RevisionId,                   SemanticProperty, Object,
-                                               EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
-                                               HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>> GraphInitializer = null)
+                         GraphInitializer<VertexId,    RevisionId,                   SemanticProperty, Object,
+                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
+                                          HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object> GraphInitializer = null)
 
             : base (GraphId,
                     GDB.Id(),
