@@ -71,20 +71,20 @@ namespace GeraTest
 
 
             // Some very simple traversals
-            foreach (var _Vertex in _SemanticGraph.Vertices)
+            foreach (var _Vertex in _SemanticGraph.Vertices())
             {
 
-                foreach (var _Edge in _Vertex.OutEdges)
+                foreach (var _Edge in _Vertex.OutEdges())
                     Console.WriteLine("V({0}) --Fwd({1})-> V({2})", _Vertex.Id, _Edge.Id, _Edge.InVertex.Id);
 
-                foreach (var _Edge in _Vertex.InEdges)
+                foreach (var _Edge in _Vertex.InEdges())
                     Console.WriteLine("V({0}) <~Bwd({1})~~ V({2})", _Vertex.Id, _Edge.Id, _Edge.OutVertex.Id);
             
             }
 
             Console.WriteLine("---------");
 
-            foreach (var _Edge in _SemanticGraph.Edges)
+            foreach (var _Edge in _SemanticGraph.Edges())
             {
                 Console.WriteLine("V({0}) --Fwd({1})-> V({2})", _Edge.OutVertex.Id, _Edge.Id, _Edge.InVertex.Id);
             }
