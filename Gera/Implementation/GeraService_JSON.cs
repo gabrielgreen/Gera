@@ -214,7 +214,7 @@ namespace de.ahzf.Gera
         /// Return a list of valid accounts.
         /// </summary>
         /// <example>
-        /// $ curl _X GET  -H "Accept: application/json" http://127.0.0.1:8182/Accounts
+        /// $ curl -X GET  -H "Accept: application/json" http://127.0.0.1:8182/Accounts
         /// {
         ///   "AccountIds": [
         ///     "Account1"

@@ -66,7 +66,7 @@ namespace de.ahzf.Gera
                     () => new Dictionary<SemanticProperty, Object>(),
 
                     // Create a new Vertex
-                    () => VertexId.NewVertexId,
+                    (Graph) => VertexId.NewVertexId,
                     (Graph, myVertexId, myVertexPropertyInitializer) =>
                         new PropertyVertex<VertexId,    RevisionId,                      SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
                                            EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
@@ -86,7 +86,7 @@ namespace de.ahzf.Gera
 
                    
                    // Create a new Edge
-                   () => EdgeId.NewEdgeId,
+                   (Graph) => EdgeId.NewEdgeId,
                    (Graph, myOutVertex, myInVertex, myEdgeId, myLabel, myEdgePropertyInitializer) =>
                         new PropertyEdge<VertexId,    RevisionId,                      SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
@@ -98,7 +98,7 @@ namespace de.ahzf.Gera
                             ),
 
                    // Create a new HyperEdge
-                   () => HyperEdgeId.NewHyperEdgeId,
+                   (Graph) => HyperEdgeId.NewHyperEdgeId,
                    (Graph, myEdges, myHyperEdgeId, myLabel, myHyperEdgePropertyInitializer) =>
                        new PropertyHyperEdge<VertexId,    RevisionId,                      SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
                                              EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object, IDictionary<SemanticProperty, Object>,
