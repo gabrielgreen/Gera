@@ -96,11 +96,13 @@ namespace GeraTest
             var _AllFoaf2 = _SemanticGraph.V().Out(_knows).Out(_knows).Prop(GDB.Id(), _FirstName).ToList();
 
 
-            var _Pipeline = new Pipeline<IPropertyVertex<VertexId,    RevisionId,                   SemanticProperty, Object,
+            var _Pipeline = new Pipeline<IPropertyVertex<VertexId,    RevisionId, SemanticProperty, SemanticProperty, Object,
                                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
+                                                         MultiEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object,
                                                          HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>,
-                                         IPropertyVertex<VertexId,    RevisionId, SemanticProperty, Object,
+                                         IPropertyVertex<VertexId,    RevisionId, SemanticProperty, SemanticProperty, Object,
                                                          EdgeId,      RevisionId, SemanticProperty, SemanticProperty, Object,
+                                                         MultiEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object,
                                                          HyperEdgeId, RevisionId, SemanticProperty, SemanticProperty, Object>>
 
                                           (v => v.Out(_knows).Out(_knows));
