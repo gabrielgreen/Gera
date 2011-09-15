@@ -18,11 +18,11 @@
 #region Usings
 
 using System;
+using System.Collections.Generic;
+
+using de.ahzf.Blueprints;
 
 using de.ahzf.Hermod.HTTP;
-using de.ahzf.Hermod.HTTP.Common;
-using System.Collections.Generic;
-using de.ahzf.Blueprints;
 
 #endregion
 
@@ -33,25 +33,14 @@ namespace de.ahzf.Gera
     /// The Gera service interface mapping HTTP/REST URIs onto .NET methods.
     /// </summary>
     //[HTTPService(Host: "localhost:8080", ForceAuthentication: true)]
-    public interface IGeraService : IHTTPService
+    [HTTPService]
+    public interface IGeraService : IHTTPBaseService
     {
 
         GeraServer GeraServer { get; set; }
 
 
         // HTTP-Methods: LINK / UNLINK
-
-        #region GetLandingpage()
-
-        /// <summary>
-        /// The HTML landing page.
-        /// </summary>
-        [NoAuthentication]
-        [HTTPMapping(HTTPMethods.GET, "/")]
-        HTTPResponse GetLandingpage();
-
-        #endregion
-
 
         #region Account
 
@@ -60,7 +49,7 @@ namespace de.ahzf.Gera
         /// </summary>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/Accounts")]
-        HTTPResponse ListValidAccounts();
+        HTTPResponseHeader ListValidAccounts();
 
 
         /// <summary>
@@ -68,7 +57,7 @@ namespace de.ahzf.Gera
         /// </summary>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.POST, "/Accounts")]
-        HTTPResponse CreateNewRandomAccount();
+        HTTPResponseHeader CreateNewRandomAccount();
         // include metadata map!
 
 
@@ -78,7 +67,7 @@ namespace de.ahzf.Gera
         /// <param name="AccountId">A valid AccountId.</param>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.PUT, "/Account/{AccountId}")]
-        HTTPResponse CreateNewAccount(String AccountId);
+        HTTPResponseHeader CreateNewAccount(String AccountId);
         // include metadata map!
 
 
@@ -88,7 +77,7 @@ namespace de.ahzf.Gera
         /// <param name="AccountId">A valid AccountId.</param>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/Account/{AccountId}")]
-        HTTPResponse GetAccountInformation(String AccountId);
+        HTTPResponseHeader GetAccountInformation(String AccountId);
 
 
         /// <summary>
@@ -97,7 +86,7 @@ namespace de.ahzf.Gera
         /// <param name="AccountId">A valid AccountId.</param>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.DELETE, "/Account/{AccountId}")]
-        HTTPResponse DeleteAccount(String AccountId);
+        HTTPResponseHeader DeleteAccount(String AccountId);
 
         #endregion
 
@@ -157,7 +146,7 @@ namespace de.ahzf.Gera
         /// </summary>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/{AccountId}/repositories")]
-        HTTPResponse ListRepositories(String AccountId);
+        HTTPResponseHeader ListRepositories(String AccountId);
 
 
         /// <summary>
@@ -383,24 +372,6 @@ namespace de.ahzf.Gera
 
         #region Utilities
 
-
-
-        /// <summary>
-        /// Returns internal resources embedded within the assembly.
-        /// </summary>
-        [NoAuthentication]
-        [HTTPMapping(HTTPMethods.GET, "/resources/{myResource}")]
-        HTTPResponse GetResources(String myResource);
-
-
-        /// <summary>
-        /// Returns the favicon.ico.
-        /// </summary>
-        [NoAuthentication]
-        [HTTPMapping(HTTPMethods.GET, "/favicon.ico")]
-        HTTPResponse GetFavicon();
-
-
         /// <summary>
         /// Get a http error for debugging purposes.
         /// An additional error reason may be given via the
@@ -409,7 +380,7 @@ namespace de.ahzf.Gera
         /// <param name="myHTTPStatusCode">The http status code.</param>
         [NoAuthentication]
         [HTTPMapping(HTTPMethods.GET, "/error/{myHTTPStatusCode}")]
-        HTTPResponse GetError(String myHTTPStatusCode);
+        HTTPResponseHeader GetError(String myHTTPStatusCode);
 
         #endregion
 

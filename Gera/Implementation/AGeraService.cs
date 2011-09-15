@@ -28,7 +28,6 @@ using de.ahzf.Blueprints;
 
 using de.ahzf.Hermod;
 using de.ahzf.Hermod.HTTP;
-using de.ahzf.Hermod.HTTP.Common;
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -41,7 +40,7 @@ namespace de.ahzf.Gera
     /// <summary>
     /// A Gera HTML service implementation.
     /// </summary>
-    public abstract class AGeraService
+    public abstract class AGeraService : AHTTPService
     {
 
         #region Data
@@ -173,7 +172,7 @@ namespace de.ahzf.Gera
         /// Returns internal resources embedded within the assembly.
         /// </summary>
         /// <param name="myResource">The path and name of the resource.</param>
-        public HTTPResponse GetResources(String myResource)
+        public HTTPResponseHeader GetResources(String myResource)
         {
 
             #region Data
@@ -197,8 +196,8 @@ namespace de.ahzf.Gera
                 // Get the apropriate content type based on the suffix of the requested resource
                 switch (myResource.Remove(0, myResource.LastIndexOf(".") + 1))
                 {
-                    case "htm":  _ResponseContentType = HTTPContentType.XHTML_UTF8;      break;
-                    case "html": _ResponseContentType = HTTPContentType.XHTML_UTF8;      break;
+                    case "htm":  _ResponseContentType = HTTPContentType.HTML_UTF8;       break;
+                    case "html": _ResponseContentType = HTTPContentType.HTML_UTF8;       break;
                     case "css":  _ResponseContentType = HTTPContentType.CSS_UTF8;        break;
                     case "gif":  _ResponseContentType = HTTPContentType.GIF;             break;
                     case "ico":  _ResponseContentType = HTTPContentType.ICO;             break;
@@ -207,20 +206,14 @@ namespace de.ahzf.Gera
                     default:     _ResponseContentType = HTTPContentType.OCTETSTREAM;     break;
                 }
 
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                        {
-                            HttpStatusCode = HTTPStatusCode.OK,
+                return new HTTPResponseBuilder() {
+                            HTTPStatusCode = HTTPStatusCode.OK,
                             ContentType    = _ResponseContentType,
                             ContentLength  = (UInt64) _ResourceContent.Length,
                             CacheControl   = "no-cache",
                             Connection     = "close",
-                        },
-
-                    _ResourceContent
-
-                );
+                            ContentStream  = _ResourceContent
+                };
 
             }
 
@@ -238,20 +231,14 @@ namespace de.ahzf.Gera
                 else
                     _ResourceContent = new MemoryStream(UTF8Encoding.UTF8.GetBytes("Error 404 - File not found!"));
 
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                        {
-                            HttpStatusCode = HTTPStatusCode.NotFound,
-                            ContentType    = HTTPContentType.XHTML_UTF8,
+                return new HTTPResponseBuilder() {
+                            HTTPStatusCode = HTTPStatusCode.NotFound,
+                            ContentType    = HTTPContentType.HTML_UTF8,
                             ContentLength  = (UInt64) _ResourceContent.Length,
                             CacheControl   = "no-cache",
                             Connection     = "close",
-                        },
-
-                    _ResourceContent
-
-                );
+                            ContentStream  = _ResourceContent
+                        };
 
             }
 
@@ -266,7 +253,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Returns the favicon.ico.
         /// </summary>
-        public HTTPResponse GetFavicon()
+        public HTTPResponseHeader GetFavicon()
         {
             return GetResources("favicon.ico");
         }
@@ -281,29 +268,23 @@ namespace de.ahzf.Gera
         /// QueryString (e.g. "/error/204&reason=unknown")
         /// </summary>
         /// <param name="myHTTPStatusCode">The http status code.</param>
-        public HTTPResponse GetError(String myHTTPStatusCode)
+        public HTTPResponseHeader GetError(String myHTTPStatusCode)
         {
 
-            IHTTPConnection.ResponseHeader.HttpStatusCode = HTTPStatusCode.ParseString(myHTTPStatusCode);
+            IHTTPConnection.ResponseHeader.HTTPStatusCode = HTTPStatusCode.ParseString(myHTTPStatusCode);
 
             if (IHTTPConnection.RequestHeader.QueryString.ContainsKey("reason"))
-                IHTTPConnection.ErrorReason = IHTTPConnection.RequestHeader.QueryString["reason"];
+                IHTTPConnection.ErrorReason = String.Join(", ", IHTTPConnection.RequestHeader.QueryString["reason"]);
 
-            return new HTTPResponse(
-
-                new HTTPResponseHeader()
-                {
-                    HttpStatusCode = IHTTPConnection.ResponseHeader.HttpStatusCode,
-                    Connection     = "close"
-                }
-
-            );
+            return new HTTPResponseBuilder() {
+                HTTPStatusCode = IHTTPConnection.ResponseHeader.HTTPStatusCode,
+                Connection     = "close"
+            };
 
         }
 
         #endregion
 
-        
     }
 
 }

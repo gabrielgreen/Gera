@@ -18,19 +18,12 @@
 #region Usings
 
 using System;
-using System.IO;
 using System.Text;
 using System.Linq;
-using System.Reflection;
 using System.Collections.Generic;
 
-using de.ahzf.Blueprints;
-
-using de.ahzf.Hermod;
 using de.ahzf.Hermod.HTTP;
-using de.ahzf.Hermod.HTTP.Common;
 
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
 #endregion
@@ -119,12 +112,12 @@ namespace de.ahzf.Gera
 
 
 
-        #region GetLandingpage()
+        #region GetRoot()
 
         /// <summary>
         /// The HTML landing page.
         /// </summary>
-        public HTTPResponse GetLandingpage()
+        public HTTPResponseHeader GetRoot()
         {
 
             var _RequestHeader = IHTTPConnection.RequestHeader;
@@ -153,19 +146,13 @@ namespace de.ahzf.Gera
                                AppendLine("<div id=\"infoarea\"></div>")
                 ));
 
-            return new HTTPResponse(
-
-                new HTTPResponseHeader()
-                {
-                    HttpStatusCode = HTTPStatusCode.OK,
+            return new HTTPResponseBuilder() {
+                    HTTPStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
                     ContentLength  = (UInt64)_Content.Length,
-                    ContentType    = HTTPContentType.HTML_UTF8
-                },
-
-                _Content
-
-            );
+                    ContentType    = HTTPContentType.HTML_UTF8,
+                    Content        = _Content
+            };
 
         }
 
@@ -178,7 +165,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Return a list of valid accounts.
         /// </summary>
-        public HTTPResponse ListValidAccounts()
+        public HTTPResponseHeader ListValidAccounts()
         {
 
             var _RequestHeader = IHTTPConnection.RequestHeader;
@@ -193,19 +180,13 @@ namespace de.ahzf.Gera
                                      }
                                  ));
 
-            return new HTTPResponse(
-
-                new HTTPResponseHeader()
-                {
-                    HttpStatusCode = HTTPStatusCode.OK,
+            return new HTTPResponseBuilder() {
+                    HTTPStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
                     ContentLength  = (UInt64) _Content.Length,
-                    ContentType    = HTTPContentType.HTML_UTF8
-                },
-
-                _Content
-
-            );
+                    ContentType    = HTTPContentType.HTML_UTF8,
+                    Content        = _Content
+            };
 
         }
 
@@ -216,7 +197,7 @@ namespace de.ahzf.Gera
         /// <summary>
         /// Create a new account using a random AccountId.
         /// </summary>
-        public HTTPResponse CreateNewRandomAccount()
+        public HTTPResponseHeader CreateNewRandomAccount()
         {
 
             var _Account       = GeraServer.CreateAccount();
@@ -226,19 +207,13 @@ namespace de.ahzf.Gera
                                                                       AppendLine("<br /><a href=\"/\">back</a><br />")
                                  ));
 
-            return new HTTPResponse(
-
-                new HTTPResponseHeader()
-                {
-                    HttpStatusCode = HTTPStatusCode.OK,
+            return new HTTPResponseBuilder() {
+                    HTTPStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
                     ContentLength  = (UInt64) _Content.Length,
-                    ContentType    = HTTPContentType.HTML_UTF8
-                },
-
-                _Content
-
-            );
+                    ContentType    = HTTPContentType.HTML_UTF8,
+                    Content        = _Content
+            };
 
         }
 
@@ -250,20 +225,17 @@ namespace de.ahzf.Gera
         /// Create a new account using the given AccountId.
         /// </summary>
         /// <param name="AccountId">A valid AccountId.</param>
-        public HTTPResponse CreateNewAccount(String AccountId)
+        public HTTPResponseHeader CreateNewAccount(String AccountId)
         {
 
             #region Not a valid AccountId
 
             if (!IsValidAccountId(AccountId))
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.BadRequest,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.BadRequest,
                         CacheControl   = "no-cache",
-                    }
-                );
+                    };
             }
 
             #endregion
@@ -296,19 +268,13 @@ namespace de.ahzf.Gera
                     _HTTPContentType = HTTPContentType.JSON_UTF8;
                 }
 
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.OK,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
                         ContentLength  = (UInt64) _Content.Length,
-                        ContentType    = _HTTPContentType
-                    },
-
-                    _Content
-
-                );
+                        ContentType    = _HTTPContentType,
+                        Content        = _Content
+                };
 
             }
 
@@ -317,13 +283,10 @@ namespace de.ahzf.Gera
 
             else
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.Conflict,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.Conflict,
                         CacheControl   = "no-cache",
-                    }
-                );
+                    };
             }
 
             #endregion
@@ -338,7 +301,7 @@ namespace de.ahzf.Gera
         ///  Get information on the given account.
         /// </summary>
         /// <param name="AccountId">A valid AccountId.</param>
-        public HTTPResponse GetAccountInformation(String AccountId)
+        public HTTPResponseHeader GetAccountInformation(String AccountId)
         {
 
             IAccount _Account;
@@ -368,19 +331,13 @@ namespace de.ahzf.Gera
                                    }
                                ));
 
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.OK,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
                         ContentLength  = (UInt64) _Content.Length,
-                        ContentType    = HTTPContentType.HTML_UTF8
-                    },
-
-                    _Content
-
-                );
+                        ContentType    = HTTPContentType.HTML_UTF8,
+                        Content        = _Content
+                };
 
             }
 
@@ -389,14 +346,11 @@ namespace de.ahzf.Gera
 
             else
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.NotFound,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.NotFound,
                         CacheControl   = "no-cache",
                         ContentLength  = 0,
-                    }
-                );
+                    };
             }
 
             #endregion
@@ -411,20 +365,17 @@ namespace de.ahzf.Gera
         /// Delete an account using the given AccountId.
         /// </summary>
         /// <param name="AccountId">A valid AccountId.</param>
-        public HTTPResponse DeleteAccount(String AccountId)
+        public HTTPResponseHeader DeleteAccount(String AccountId)
         {
 
             #region Not a valid AccountId
 
             if (!IsValidAccountId(AccountId))
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.BadRequest,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.BadRequest,
                         CacheControl   = "no-cache",
-                    }
-                );
+                    };
             }
 
             #endregion
@@ -441,30 +392,21 @@ namespace de.ahzf.Gera
                                           _StringBuilder => _StringBuilder.AppendLine("<br /><a href=\"/\">back</a><br />")
                                       ));
 
-                    return new HTTPResponse(
-
-                        new HTTPResponseHeader()
-                        {
-                            HttpStatusCode = HTTPStatusCode.OK,
+                    return new HTTPResponseBuilder() {
+                            HTTPStatusCode = HTTPStatusCode.OK,
                             CacheControl   = "no-cache",
                             ContentLength  = (UInt64) _Content.Length,
-                            ContentType    = HTTPContentType.HTML_UTF8
-                        },
-
-                        _Content
-
-                    );
+                            ContentType    = HTTPContentType.HTML_UTF8,
+                            Content        = _Content
+                    };
 
 
                 }
 
-                else return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.InternalServerError,
+                else return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.InternalServerError,
                         CacheControl   = "no-cache"
-                    }
-                );
+                    };
 
             }
 
@@ -473,13 +415,10 @@ namespace de.ahzf.Gera
 
             else
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.NotFound,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.NotFound,
                         CacheControl   = "no-cache",
-                    }
-                );
+                };
             }
 
             #endregion
@@ -493,7 +432,7 @@ namespace de.ahzf.Gera
 
         #region ListRepositories()
 
-        public HTTPResponse ListRepositories(String AccountId)
+        public HTTPResponseHeader ListRepositories(String AccountId)
         {
 
             IAccount _Account;
@@ -521,19 +460,13 @@ namespace de.ahzf.Gera
                                    }
                                ));
 
-                return new HTTPResponse(
-
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.OK,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
                         ContentLength  = (UInt64) _Content.Length,
-                        ContentType    = HTTPContentType.HTML_UTF8
-                    },
-
-                    _Content
-
-                );
+                        ContentType    = HTTPContentType.HTML_UTF8,
+                        Content        = _Content
+                };
 
             }
 
@@ -542,14 +475,11 @@ namespace de.ahzf.Gera
 
             else
             {
-                return new HTTPResponse(
-                    new HTTPResponseHeader()
-                    {
-                        HttpStatusCode = HTTPStatusCode.NotFound,
+                return new HTTPResponseBuilder() {
+                        HTTPStatusCode = HTTPStatusCode.NotFound,
                         CacheControl   = "no-cache",
                         ContentLength  = 0,
-                    }
-                );
+                };
             }
 
             #endregion
@@ -557,7 +487,6 @@ namespace de.ahzf.Gera
         }
 
         #endregion
-
 
     }
 
