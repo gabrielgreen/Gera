@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Datastructures\GraphId.cs" />
     <Compile Include="Implementation\AGeraService.cs" />
+    <Compile Include="Implementation\GeraService_EVENTSTREAM.cs" />
+    <Compile Include="Implementation\GeraService.cs" />
     <Compile Include="Interfaces\IGeraServer.cs" />
     <Compile Include="Ontologies\GDB.cs" />
     <Compile Include="Ontologies\FOAF.cs" />

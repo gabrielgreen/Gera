@@ -74,7 +74,7 @@ namespace de.ahzf.Gera
         /// Initialize the GeraServer using IPAddress.Any, http port 8182 and start the server.
         /// </summary>
         public GeraServer()
-            : base(IPv4Address.Any, new IPPort(8182), Autostart: true)
+            : base(IPv4Address.Any, new IPPort(80), Autostart: true)
         {
 
             ServerName    = DefaultServerName;

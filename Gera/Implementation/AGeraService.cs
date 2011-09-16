@@ -18,19 +18,12 @@
 #region Usings
 
 using System;
-using System.IO;
-using System.Text;
-using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
 using de.ahzf.Blueprints;
 
-using de.ahzf.Hermod;
 using de.ahzf.Hermod.HTTP;
-
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 #endregion
 
@@ -43,18 +36,8 @@ namespace de.ahzf.Gera
     public abstract class AGeraService : AHTTPService
     {
 
-        #region Data
-
-        /// <summary>
-        /// A list of supported HTTP ContentTypes.
-        /// </summary>
-        protected IEnumerable<HTTPContentType> _HTTPContentTypes;
-
-        #endregion
-
         #region Properties
 
-        public IHTTPConnection IHTTPConnection { get; protected set; }
         public GeraServer      GeraServer      { get; set; }
 
         #endregion
@@ -71,21 +54,53 @@ namespace de.ahzf.Gera
 
         #endregion
 
-        #endregion
-
-        
-        #region HTTPContentTypes
+        #region AGeraService(HTTPContentType)
 
         /// <summary>
-        /// A list of supported HTTP ContentTypes.
+        /// Creates a new abstract GeraService.
         /// </summary>
-        public IEnumerable<HTTPContentType> HTTPContentTypes
+        /// <param name="HTTPContentType">A content type.</param>
+        public AGeraService(HTTPContentType HTTPContentType)
+            : base(HTTPContentType)
+        { }
+
+        #endregion
+
+        #region AGeraService(HTTPContentTypes)
+
+        /// <summary>
+        /// Creates a new abstract GeraService.
+        /// </summary>
+        public AGeraService(IEnumerable<HTTPContentType> HTTPContentTypes)
+        { }
+
+        #endregion
+
+        #region AGeraService(IHTTPConnection, HTTPContentType, ResourcePath)
+
+        /// <summary>
+        /// Creates a new abstract AGeraService.
+        /// </summary>
+        public AGeraService(IHTTPConnection IHTTPConnection, HTTPContentType HTTPContentType, String ResourcePath)
+            : base(IHTTPConnection, HTTPContentType, ResourcePath)
         {
-            get
-            {
-                return _HTTPContentTypes;
-            }
+            this.CallingAssembly = Assembly.GetExecutingAssembly();
         }
+
+        #endregion
+
+        #region AGeraService(IHTTPConnection, HTTPContentTypes, ResourcePath)
+
+        /// <summary>
+        /// Creates a new abstract AGeraService.
+        /// </summary>
+        public AGeraService(IHTTPConnection IHTTPConnection, IEnumerable<HTTPContentType> HTTPContentTypes, String ResourcePath)
+            : base(IHTTPConnection, HTTPContentTypes, ResourcePath)
+        {
+            this.CallingAssembly = Assembly.GetExecutingAssembly();
+        }
+
+        #endregion
 
         #endregion
 
@@ -164,101 +179,6 @@ namespace de.ahzf.Gera
 
         #endregion
 
-
-
-        #region GetResources(myResource)
-
-        /// <summary>
-        /// Returns internal resources embedded within the assembly.
-        /// </summary>
-        /// <param name="myResource">The path and name of the resource.</param>
-        public HTTPResponseHeader GetResources(String myResource)
-        {
-
-            #region Data
-
-            var _Assembly     = Assembly.GetExecutingAssembly();
-            var _AllResources = _Assembly.GetManifestResourceNames();
-
-            myResource = myResource.Replace('/', '.');
-
-            #endregion
-
-            #region Return internal assembly resources...
-
-            if (_AllResources.Contains("Gera.resources." + myResource))
-            {
-
-                var _ResourceContent = _Assembly.GetManifestResourceStream("Gera.resources." + myResource);
-
-                HTTPContentType _ResponseContentType = null;
-
-                // Get the apropriate content type based on the suffix of the requested resource
-                switch (myResource.Remove(0, myResource.LastIndexOf(".") + 1))
-                {
-                    case "htm":  _ResponseContentType = HTTPContentType.HTML_UTF8;       break;
-                    case "html": _ResponseContentType = HTTPContentType.HTML_UTF8;       break;
-                    case "css":  _ResponseContentType = HTTPContentType.CSS_UTF8;        break;
-                    case "gif":  _ResponseContentType = HTTPContentType.GIF;             break;
-                    case "ico":  _ResponseContentType = HTTPContentType.ICO;             break;
-                    case "swf":  _ResponseContentType = HTTPContentType.SWF;             break;
-                    case "js":   _ResponseContentType = HTTPContentType.JAVASCRIPT_UTF8; break;
-                    default:     _ResponseContentType = HTTPContentType.OCTETSTREAM;     break;
-                }
-
-                return new HTTPResponseBuilder() {
-                            HTTPStatusCode = HTTPStatusCode.OK,
-                            ContentType    = _ResponseContentType,
-                            ContentLength  = (UInt64) _ResourceContent.Length,
-                            CacheControl   = "no-cache",
-                            Connection     = "close",
-                            ContentStream  = _ResourceContent
-                };
-
-            }
-
-            #endregion
-
-            #region ...or send an (custom) error 404!
-
-            else
-            {
-                
-                Stream _ResourceContent = null;
-
-                if (_AllResources.Contains("Gera.resources.errorpages.Error404.html"))
-                    _ResourceContent = _Assembly.GetManifestResourceStream("Gera.resources.errorpages.Error404.html");
-                else
-                    _ResourceContent = new MemoryStream(UTF8Encoding.UTF8.GetBytes("Error 404 - File not found!"));
-
-                return new HTTPResponseBuilder() {
-                            HTTPStatusCode = HTTPStatusCode.NotFound,
-                            ContentType    = HTTPContentType.HTML_UTF8,
-                            ContentLength  = (UInt64) _ResourceContent.Length,
-                            CacheControl   = "no-cache",
-                            Connection     = "close",
-                            ContentStream  = _ResourceContent
-                        };
-
-            }
-
-            #endregion
-
-        }
-
-        #endregion
-
-        #region GetFavicon()
-
-        /// <summary>
-        /// Returns the favicon.ico.
-        /// </summary>
-        public HTTPResponseHeader GetFavicon()
-        {
-            return GetResources("favicon.ico");
-        }
-
-        #endregion
 
         #region GetError(myHTTPStatusCode)
 

@@ -20,11 +20,8 @@
 using System;
 using System.Text;
 using System.Linq;
-using System.Collections.Generic;
 
 using de.ahzf.Hermod.HTTP;
-
-using Newtonsoft.Json;
 
 #endregion
 
@@ -39,29 +36,26 @@ namespace de.ahzf.Gera
 
         #region Constructor(s)
 
-        #region GeraService()
+        #region GeraService_HTML()
 
         /// <summary>
         /// Creates a new GeraService.
         /// </summary>
         public GeraService_HTML()
-        {
-            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.HTML_UTF8 };
-        }
+            : base(HTTPContentType.HTML_UTF8)
+        { }
 
         #endregion
 
-        #region GeraService(myIHTTPConnection)
+        #region GeraService_HTML(IHTTPConnection)
 
         /// <summary>
         /// Creates a new GeraService.
         /// </summary>
-        /// <param name="myIHTTPConnection">The http connection for this request.</param>
-        public GeraService_HTML(IHTTPConnection myIHTTPConnection)
-        {
-            IHTTPConnection = myIHTTPConnection;
-            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.HTML_UTF8 };
-        }
+        /// <param name="IHTTPConnection">The http connection for this request.</param>
+        public GeraService_HTML(IHTTPConnection IHTTPConnection)
+            : base(IHTTPConnection, HTTPContentType.HTML_UTF8, "Gera.resources.")
+        { }
 
         #endregion
 
@@ -109,7 +103,6 @@ namespace de.ahzf.Gera
         }
 
         #endregion
-
 
 
         #region GetRoot()
@@ -247,32 +240,16 @@ namespace de.ahzf.Gera
 
                 var _Account       = GeraServer.CreateAccount(AccountId: _NewAccountId);
                 var _RequestHeader = IHTTPConnection.RequestHeader;
-                Byte[]          _Content;
-                HTTPContentType _HTTPContentType;
-
-                var _Accept = _RequestHeader.GetBestMatchingAcceptHeader(HTTPContentType.JSON_UTF8, HTTPContentType.HTML_UTF8);
-
-                if (_Accept == HTTPContentType.JSON_UTF8)
-                {
-                    _Content         = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new {
-                                           AccountId = _Account.Id.ToString()
-                                       }));
-                    _HTTPContentType = HTTPContentType.JSON_UTF8;
-                }
-                else
-                {
-                    _Content = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
-                                      _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Id.ToString() + "\">" + _Account.Id.ToString() + "</a><br />").
-                                                                       AppendLine("<br /><a href=\"/\">back</a><br />")
-                                  ));
-                    _HTTPContentType = HTTPContentType.JSON_UTF8;
-                }
+                var _Content       = Encoding.UTF8.GetBytes(HTMLBuilder("Account Created!",
+                                            _StringBuilder => _StringBuilder.AppendLine("<a href=\"/Account/" + _Account.Id.ToString() + "\">" + _Account.Id.ToString() + "</a><br />").
+                                                                             AppendLine("<br /><a href=\"/\">back</a><br />")
+                                        ));
 
                 return new HTTPResponseBuilder() {
                         HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
                         ContentLength  = (UInt64) _Content.Length,
-                        ContentType    = _HTTPContentType,
+                        ContentType    = HTTPContentType.HTML_UTF8,
                         Content        = _Content
                 };
 

@@ -23,6 +23,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using de.ahzf.Pipes.ExtensionMethods;
+using de.ahzf.Hermod;
 using de.ahzf.Hermod.HTTP;
 
 using Newtonsoft.Json.Linq;
@@ -55,24 +56,21 @@ namespace de.ahzf.Gera
         /// Creates a new GeraService.
         /// </summary>
         public GeraService_JSON()
-        {
-            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.JSON_UTF8 };
-            JSON_Success      = Encoding.UTF8.GetBytes(new JObject(new JProperty("result", "success")).ToString());
-        }
+            : base(HTTPContentType.JSON_UTF8)
+        { }
 
         #endregion
 
-        #region GeraService_JSON(myIHTTPConnection)
+        #region GeraService_JSON(IHTTPConnection)
 
         /// <summary>
         /// Creates a new GeraService.
         /// </summary>
-        /// <param name="myIHTTPConnection">The http connection for this request.</param>
-        public GeraService_JSON(IHTTPConnection myIHTTPConnection)
+        /// <param name="IHTTPConnection">The http connection for this request.</param>
+        public GeraService_JSON(IHTTPConnection IHTTPConnection)
+            : base(IHTTPConnection, HTTPContentType.JSON_UTF8, "Gera.resources.")
         {
-            IHTTPConnection   = myIHTTPConnection;
-            _HTTPContentTypes = new List<HTTPContentType>() { HTTPContentType.JSON_UTF8 };
-            JSON_Success      = Encoding.UTF8.GetBytes(new JObject(new JProperty("result", "success")).ToString());
+            JSON_Success      = new JObject(new JProperty("result", "success")).ToString().ToUTF8Bytes();
         }
 
         #endregion
@@ -212,16 +210,13 @@ namespace de.ahzf.Gera
         public HTTPResponseHeader ListValidAccounts()
         {
 
-            var _Content = Encoding.UTF8.GetBytes(new JObject(
-                               new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))
-                           ).ToString());
-
             return new HTTPResponseBuilder() {
                     HTTPStatusCode = HTTPStatusCode.OK,
                     CacheControl   = "no-cache",
-                    ContentLength  = (UInt64) _Content.Length,
                     ContentType    = HTTPContentType.JSON_UTF8,
-                    Content        = _Content
+                    Content        = new JObject(
+                                        new JProperty("AccountIds", GeraServer.AccountIds.MapEach(_AccountId => _AccountId.ToString()))
+                                     ).ToString().ToUTF8Bytes()
             };
 
         }
@@ -264,17 +259,17 @@ namespace de.ahzf.Gera
             if (IHTTPConnection.RequestBody.Length > 0)
             {
                 _Account = GeraServer.CreateAccount(Metadata: ParseMetadata());
-                _Content = Encoding.UTF8.GetBytes(new JObject(
+                _Content = new JObject(
                                new JProperty(__AccountId, _Account.Id.ToString()),
                                new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
-                           ).ToString());
+                           ).ToString().ToUTF8Bytes();
             }
             else
             {
                 _Account = GeraServer.CreateAccount();
-                _Content = Encoding.UTF8.GetBytes(new JObject(
+                _Content = new JObject(
                                new JProperty(__AccountId, _Account.Id.ToString())
-                           ).ToString());
+                           ).ToString().ToUTF8Bytes();
             }
 
 
@@ -282,7 +277,6 @@ namespace de.ahzf.Gera
                     HTTPStatusCode = HTTPStatusCode.Created,
                     Location       = "http://" + IHTTPConnection.RequestHeader.Host + "/Account/" + _Account.Id.ToString(),
                     CacheControl   = "no-cache",
-                    ContentLength  = (UInt64) _Content.Length,
                     ContentType    = HTTPContentType.JSON_UTF8,
                     Content        = _Content
             };
@@ -323,12 +317,7 @@ namespace de.ahzf.Gera
             #region Not a valid AccountId
 
             if (!IsValidAccountId(AccountId))
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.BadRequest,
-                        CacheControl   = "no-cache",
-                };
-            }
+                return Error400_BadRequest();
 
             #endregion
 
@@ -345,26 +334,25 @@ namespace de.ahzf.Gera
                 if (IHTTPConnection.RequestBody.Length > 0)
                 {
                     _Account = GeraServer.CreateAccount(AccountId: _NewAccountId, Metadata: ParseMetadata());
-                    _Content = Encoding.UTF8.GetBytes(new JObject(
+                    _Content = new JObject(
                                    new JProperty(__AccountId, _Account.Id.ToString()),
                                    new JProperty(__Metadata, new JObject(from _Metadatum in _Account.Metadata select new JProperty(_Metadatum.Key, _Metadatum.Value)))
-                               ).ToString());
+                               ).ToString().ToUTF8Bytes();
                 }
                 else
                 {
                     _Account = GeraServer.CreateAccount(AccountId: _NewAccountId);
-                    _Content = Encoding.UTF8.GetBytes(new JObject(
+                    _Content = new JObject(
                                    new JProperty(__AccountId, _Account.Id.ToString())
-                               ).ToString());
+                               ).ToString().ToUTF8Bytes();
                 }
 
                 return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.Created,
-                        Location       = "http://" + IHTTPConnection.RequestHeader.Host + "/Account/" + _Account.Id.ToString(),
-                        CacheControl   = "no-cache",
-                        ContentLength  = (UInt64) _Content.Length,
-                        ContentType    = HTTPContentType.JSON_UTF8,
-                        Content        = _Content
+                    HTTPStatusCode = HTTPStatusCode.Created,
+                    Location       = "http://" + IHTTPConnection.RequestHeader.Host + "/Account/" + _Account.Id.ToString(),
+                    CacheControl   = "no-cache",
+                    ContentType    = HTTPContentType.JSON_UTF8,
+                    Content        = _Content
                 };
 
             }
@@ -373,12 +361,7 @@ namespace de.ahzf.Gera
             #region ...or conflict!
 
             else
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.Conflict,
-                        CacheControl   = "no-cache",
-                    };
-            }
+                return Error409_Conflict();
 
             #endregion
 
@@ -402,24 +385,30 @@ namespace de.ahzf.Gera
         public HTTPResponseHeader GetAccountInformation(String AccountId)
         {
 
+            #region Not a valid AccountId
+
+            if (!IsValidAccountId(AccountId))
+                return Error400_BadRequest();
+
+            #endregion
+
             IAccount _Account;
             var      _AccountId = new AccountId(AccountId);
 
             if (GeraServer.TryGetAccount(_AccountId, out _Account))
             {
 
-                var _Content = Encoding.UTF8.GetBytes(new JObject(
+                var _Content = new JObject(
                                    new JProperty(__AccountId, AccountId),
                                    new JProperty("Repositories", new JArray(
                                        from   _RepositoryId
                                        in     _Account.RepositoryIds
                                        select _RepositoryId.ToString()))
-                               ).ToString());
+                               ).ToString().ToUTF8Bytes();
 
                 return new HTTPResponseBuilder() {
                         HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
-                        ContentLength  = (UInt64) _Content.Length,
                         ContentType    = HTTPContentType.JSON_UTF8,
                         Content        = _Content
                 };
@@ -430,13 +419,7 @@ namespace de.ahzf.Gera
             #region ...invalid AccountId!
 
             else
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.NotFound,
-                        CacheControl   = "no-cache",
-                        ContentLength  = 0,
-                    };
-            }
+                return Error404_NotFound();
 
             #endregion
 
@@ -459,12 +442,7 @@ namespace de.ahzf.Gera
             #region Not a valid AccountId
 
             if (!IsValidAccountId(AccountId))
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.BadRequest,
-                        CacheControl   = "no-cache",
-                    };
-            }
+                return Error400_BadRequest();
 
             #endregion
 
@@ -492,12 +470,7 @@ namespace de.ahzf.Gera
             #region ...or not found!
 
             else
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.NotFound,
-                        CacheControl   = "no-cache",
-                    };
-            }
+                return Error404_NotFound();
 
             #endregion
 
@@ -517,35 +490,20 @@ namespace de.ahzf.Gera
             var      _AccountId = new AccountId(AccountId);
 
             if (GeraServer.TryGetAccount(_AccountId, out _Account))
-            {
-
-                var _Content = Encoding.UTF8.GetBytes(
-                                   new JArray(from   _RepositoryId
-                                              in     _Account.RepositoryIds
-                                              select _RepositoryId.ToString()).
-                                   ToString());
-
                 return new HTTPResponseBuilder() {
                         HTTPStatusCode = HTTPStatusCode.OK,
                         CacheControl   = "no-cache",
-                        ContentLength  = (UInt64) _Content.Length,
                         ContentType    = HTTPContentType.JSON_UTF8,
-                        Content        = _Content
+                        Content        = new JArray(from   _RepositoryId
+                                                    in     _Account.RepositoryIds
+                                                    select _RepositoryId.ToString()).ToString().ToUTF8Bytes()
                 };
-
-            }
 
 
             #region ...invalid AccountId!
 
             else
-            {
-                return new HTTPResponseBuilder() {
-                        HTTPStatusCode = HTTPStatusCode.NotFound,
-                        CacheControl   = "no-cache",
-                        ContentLength  = 0
-                    };
-            }
+                return Error404_NotFound();
 
             #endregion
 
